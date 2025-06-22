@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blaze Phoenix - VTuber Profile</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@400;700&family=Mali:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Kanit', sans-serif;
+            background: linear-gradient(180deg, #3a0a0a 0%, #5a1a1a 100%); /* Deep fiery red gradient */
+            color: #ffe0c0; /* Light orange-yellow */
+            margin: 0;
+            padding: 2rem 1rem;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow-x: hidden;
+        }
+        .profile-container {
+            max-width: 900px;
+            margin: 0 auto;
+            background-color: rgba(80, 20, 20, 0.7); /* Darker transparent red background */
+            backdrop-filter: blur(8px);
+            border-radius: 30px;
+            padding: 3rem;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.6);
+            text-align: center;
+            animation: fadeInScale 0.8s ease-out forwards; /* Entry animation */
+            position: relative;
+            border: 2px solid #ffa07a; /* Light Salmon border */
+            overflow: hidden;
+        }
+        @keyframes fadeInScale {
+            from { opacity: 0; transform: scale(0.8); }
+            to { opacity: 1; transform: scale(1); }
+        }
+        /* Fire/spark background effect */
+        .profile-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('https://placehold.co/50x50/ff4500/FFFFFF?text=%E2%9A%A2') repeat; /* Orange fire placeholder */
+            opacity: 0.15;
+            animation: fireBackground 20s linear infinite;
+        }
+        @keyframes fireBackground {
+            from { background-position: 0 0; }
+            to { background-position: 100% 100%; }
+        }
+
+        .profile-header h1 {
+            font-family: 'Mali', cursive;
+            font-size: 4.5rem;
+            font-weight: 700;
+            color: #ffa07a; /* Light Salmon */
+            text-shadow: 0 0 25px rgba(255, 160, 122, 0.8);
+            margin-bottom: 1.5rem;
+            position: relative;
+            z-index: 1;
+        }
+        .profile-header p {
+            font-size: 1.3rem;
+            color: #ffcba4;
+            margin-bottom: 2rem;
+            line-height: 1.7;
+            position: relative;
+            z-index: 1;
+        }
+        .profile-image {
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin: 0 auto 2rem;
+            border: 7px solid #ffa07a; /* Light Salmon border */
+            box-shadow: 0 0 25px rgba(255, 160, 122, 0.7);
+            animation: flameEffect 1.5s infinite alternate;
+            position: relative;
+            z-index: 1;
+        }
+        @keyframes flameEffect {
+            0% { box-shadow: 0 0 10px rgba(255, 160, 122, 0.7); transform: translateY(0px); }
+            50% { box-shadow: 0 0 25px rgba(255, 69, 0, 1), 0 0 35px rgba(255, 160, 122, 0.8); transform: translateY(-5px); }
+            100% { box-shadow: 0 0 10px rgba(255, 160, 122, 0.7); transform: translateY(0px); }
+        }
+
+        .profile-details {
+            text-align: left;
+            margin-top: 2rem;
+            font-size: 1.1rem;
+            line-height: 1.8;
+            position: relative;
+            z-index: 1;
+        }
+        .profile-details h3 {
+            font-family: 'Mali', cursive;
+            font-size: 2rem;
+            color: #ffdab9; /* Peach Puff */
+            margin-bottom: 1rem;
+            border-bottom: 2px solid rgba(255, 218, 185, 0.5);
+            padding-bottom: 0.5rem;
+        }
+        .profile-details ul {
+            list-style: none;
+            padding: 0;
+            margin-bottom: 2rem;
+        }
+        .profile-details ul li {
+            margin-bottom: 0.8rem;
+            padding-left: 1.5rem;
+            position: relative;
+        }
+        .profile-details ul li::before {
+            content: '🔥'; /* Fire emoji bullet */
+            position: absolute;
+            left: 0;
+            color: #ffa07a;
+        }
+        .profile-bio {
+            text-align: justify;
+            margin-top: 2rem;
+        }
+        .profile-bio p {
+            margin-bottom: 1.5rem;
+            text-indent: 2rem;
+        }
+
+        .back-button-container {
+            margin-top: 3rem;
+            text-align: center;
+            position: relative;
+            z-index: 1;
+        }
+        .back-button {
+            display: inline-block;
+            padding: 0.9rem 2.5rem;
+            background: linear-gradient(90deg, #ffa07a 0%, #ff4500 100%); /* Light Salmon to Orange Red */
+            color: white;
+            border-radius: 35px;
+            text-decoration: none;
+            font-size: 1.2rem;
+            font-weight: 700;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            border: none;
+            cursor: pointer;
+        }
+        .back-button:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5), 0 0 25px rgba(255, 69, 0, 0.8);
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .profile-container {
+                padding: 2rem;
+            }
+            .profile-header h1 {
+                font-size: 3.5rem;
+            }
+            .profile-header p {
+                font-size: 1.1rem;
+            }
+            .profile-image {
+                width: 160px;
+                height: 160px;
+            }
+            .profile-details h3 {
+                font-size: 1.8rem;
+            }
+            .profile-details, .profile-bio {
+                font-size: 1rem;
+            }
+            .back-button {
+                padding: 0.8rem 2rem;
+                font-size: 1.1rem;
+            }
+        }
+        @media (max-width: 480px) {
+            .profile-container {
+                padding: 1.5rem;
+                border-radius: 20px;
+            }
+            .profile-header h1 {
+                font-size: 2.8rem;
+            }
+            .profile-header p {
+                font-size: 0.9rem;
+            }
+            .profile-image {
+                width: 120px;
+                height: 120px;
+                margin-bottom: 1.5rem;
+            }
+            .profile-details h3 {
+                font-size: 1.5rem;
+            }
+            .profile-details, .profile-bio {
+                font-size: 0.9rem;
+            }
+            .back-button {
+                padding: 0.7rem 1.8rem;
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="profile-container">
+        <header class="profile-header">
+            <img src="https://placehold.co/200x200/ffa07a/FFFFFF?text=Blaze" alt="Blaze Phoenix" class="profile-image">
+            <h1>Blaze Phoenix</h1>
+            <p>นักรบเพลิงผู้กล้าหาญและเต็มไปด้วยความมุ่งมั่น ผู้เกิดใหม่จากเถ้าถ่านพร้อมจิตวิญญาณแห่งฟีนิกซ์</p>
+        </header>
+
+        <section class="profile-details">
+            <h3>ข้อมูลส่วนตัว</h3>
+            <ul>
+                <li><strong>อายุ:</strong> 22</li>
+                <li><strong>วันเกิด:</strong> 15 พฤศจิกายน</li>
+                <li><strong>ถิ่นกำเนิด:</strong> ดินแดนแห่งเปลวเพลิง</li>
+                <li><strong>สีโปรด:</strong> แดงเพลิง, ทอง, ดำ</li>
+                <li><strong>งานอดิเรก:</strong> ฝึกดาบโบราณ, สร้างสรรค์เมนูเผ็ดร้อน, วิ่งมาราธอนข้ามภูเขาไฟ</li>
+                <li><strong>ความสามารถพิเศษ:</strong> ควบคุมไฟ, เพิ่มพลังกาย, ฟื้นฟูตัวเองจากความเสียหาย</li>
+                <li><strong>สโลแกน:</strong> "ลุกโชนไปด้วยพลังแห่งไฟ! ไม่มีอะไรหยุดยั้งเราได้!"</li>
+            </ul>
+
+            <h3>ประวัติโดยละเอียด</h3>
+            <div class="profile-bio">
+                <p>Blaze Phoenix เป็นนักรบผู้สูงส่งจากอาณาจักรแห่งเปลวเพลิง เขาเป็นผู้ที่เกิดใหม่จากเถ้าถ่าน เหมือนดั่งนกฟีนิกซ์ในตำนานที่ไม่มีวันตาย เขาใช้ชีวิตเพื่อฝึกฝนและแสวงหาความแข็งแกร่ง เพื่อปกป้องผู้บริสุทธิ์และต่อสู้กับความอยุติธรรม</p>
+                <p>แม้จะดูเป็นคนจริงจังและมุ่งมั่น แต่ Blaze ก็มีมุมที่อบอุ่นและภักดีต่อสหาย เขาเชื่อมั่นในพลังแห่งมิตรภาพและพร้อมที่จะยืนหยัดเคียงข้างทุกคนที่ต้องการความช่วยเหลือ การตัดสินใจเป็น VTuber ของเขาเกิดจากความต้องการที่จะสร้างแรงบันดาลใจให้กับผู้คน และแสดงให้เห็นว่าทุกคนมีความสามารถที่จะลุกขึ้นสู้และก้าวข้ามอุปสรรคได้</p>
+                <p>Blaze มักจะสตรีมการผจญภัยในเกมแนว Action-RPG หรือพูดคุยเกี่ยวกับปรัชญาของการต่อสู้และการเอาชีวิตรอด เขายังชอบแบ่งปันสูตรอาหารเผ็ดร้อนที่เขาคิดค้นขึ้นเอง และท้าทายผู้ชมด้วยแบบฝึกหัดกายภาพที่เข้มข้น เพื่อกระตุ้นให้ทุกคนใช้ชีวิตอย่างเต็มที่.</p>
+            </div>
+        </section>
+
+        <div class="back-button-container">
+            <a href="หน้าตัวละคร.html" class="back-button">กลับหน้าตัวละคร</a>
+        </div>
+
+        <footer class="mt-8 text-sm opacity-60 text-center">
+            &copy; 2025 VTuber Universe. สงวนลิขสิทธิ์
+        </footer>
+    </div>
+</body>
+</html>

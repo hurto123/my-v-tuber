@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kaito Aqua - VTuber Profile</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@400;700&family=Mali:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Kanit', sans-serif;
+            background: linear-gradient(180deg, #0a1a3a 0%, #1a3a5a 100%); /* Deep blue gradient */
+            color: #e0f2f7; /* Light cyan */
+            margin: 0;
+            padding: 2rem 1rem;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow-x: hidden;
+        }
+        .profile-container {
+            max-width: 900px;
+            margin: 0 auto;
+            background-color: rgba(0, 30, 60, 0.7); /* Darker transparent blue background */
+            backdrop-filter: blur(8px);
+            border-radius: 30px;
+            padding: 3rem;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.6);
+            text-align: center;
+            animation: slideInFromRight 0.8s ease-out forwards; /* Entry animation */
+            position: relative;
+            border: 2px solid #87ceeb; /* Sky Blue border */
+            overflow: hidden;
+        }
+        @keyframes slideInFromRight {
+            from { opacity: 0; transform: translateX(100px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+        /* Bubble background effect */
+        .profile-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('https://placehold.co/50x50/87ceeb/FFFFFF?text=%E2%97%8B') repeat; /* Light blue bubble placeholder */
+            opacity: 0.15;
+            animation: bubbleBackground 40s linear infinite;
+        }
+        @keyframes bubbleBackground {
+            from { background-position: 0 0; }
+            to { background-position: 100% 100%; }
+        }
+
+        .profile-header h1 {
+            font-family: 'Mali', cursive;
+            font-size: 4.5rem;
+            font-weight: 700;
+            color: #87ceeb; /* Sky Blue */
+            text-shadow: 0 0 25px rgba(135, 206, 235, 0.8);
+            margin-bottom: 1.5rem;
+            position: relative;
+            z-index: 1;
+        }
+        .profile-header p {
+            font-size: 1.3rem;
+            color: #c0d9ec;
+            margin-bottom: 2rem;
+            line-height: 1.7;
+            position: relative;
+            z-index: 1;
+        }
+        .profile-image {
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin: 0 auto 2rem;
+            border: 7px solid #87ceeb; /* Sky Blue border */
+            box-shadow: 0 0 25px rgba(135, 206, 235, 0.7);
+            animation: floatGlow 2.5s infinite alternate;
+            position: relative;
+            z-index: 1;
+        }
+        @keyframes floatGlow {
+            0% { transform: translateY(0px); box-shadow: 0 0 15px rgba(135, 206, 235, 0.7); }
+            50% { transform: translateY(-10px); box-shadow: 0 0 30px rgba(135, 206, 235, 1), 0 0 40px rgba(135, 206, 235, 0.5); }
+            100% { transform: translateY(0px); box-shadow: 0 0 15px rgba(135, 206, 235, 0.7); }
+        }
+
+        .profile-details {
+            text-align: left;
+            margin-top: 2rem;
+            font-size: 1.1rem;
+            line-height: 1.8;
+            position: relative;
+            z-index: 1;
+        }
+        .profile-details h3 {
+            font-family: 'Mali', cursive;
+            font-size: 2rem;
+            color: #b0e0e6; /* Powder Blue */
+            margin-bottom: 1rem;
+            border-bottom: 2px solid rgba(176, 224, 230, 0.5);
+            padding-bottom: 0.5rem;
+        }
+        .profile-details ul {
+            list-style: none;
+            padding: 0;
+            margin-bottom: 2rem;
+        }
+        .profile-details ul li {
+            margin-bottom: 0.8rem;
+            padding-left: 1.5rem;
+            position: relative;
+        }
+        .profile-details ul li::before {
+            content: '🌊'; /* Wave emoji bullet */
+            position: absolute;
+            left: 0;
+            color: #87ceeb;
+        }
+        .profile-bio {
+            text-align: justify;
+            margin-top: 2rem;
+        }
+        .profile-bio p {
+            margin-bottom: 1.5rem;
+            text-indent: 2rem;
+        }
+
+        .back-button-container {
+            margin-top: 3rem;
+            text-align: center;
+            position: relative;
+            z-index: 1;
+        }
+        .back-button {
+            display: inline-block;
+            padding: 0.9rem 2.5rem;
+            background: linear-gradient(90deg, #87ceeb 0%, #5f9ea0 100%); /* Sky Blue to Cadet Blue */
+            color: white;
+            border-radius: 35px;
+            text-decoration: none;
+            font-size: 1.2rem;
+            font-weight: 700;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            border: none;
+            cursor: pointer;
+        }
+        .back-button:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5), 0 0 25px rgba(135, 206, 235, 0.8);
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .profile-container {
+                padding: 2rem;
+            }
+            .profile-header h1 {
+                font-size: 3.5rem;
+            }
+            .profile-header p {
+                font-size: 1.1rem;
+            }
+            .profile-image {
+                width: 160px;
+                height: 160px;
+            }
+            .profile-details h3 {
+                font-size: 1.8rem;
+            }
+            .profile-details, .profile-bio {
+                font-size: 1rem;
+            }
+            .back-button {
+                padding: 0.8rem 2rem;
+                font-size: 1.1rem;
+            }
+        }
+        @media (max-width: 480px) {
+            .profile-container {
+                padding: 1.5rem;
+                border-radius: 20px;
+            }
+            .profile-header h1 {
+                font-size: 2.8rem;
+            }
+            .profile-header p {
+                font-size: 0.9rem;
+            }
+            .profile-image {
+                width: 120px;
+                height: 120px;
+                margin-bottom: 1.5rem;
+            }
+            .profile-details h3 {
+                font-size: 1.5rem;
+            }
+            .profile-details, .profile-bio {
+                font-size: 0.9rem;
+            }
+            .back-button {
+                padding: 0.7rem 1.8rem;
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="profile-container">
+        <header class="profile-header">
+            <img src="https://placehold.co/200x200/87ceeb/FFFFFF?text=Kaito" alt="Kaito Aqua" class="profile-image">
+            <h1>Kaito Aqua</h1>
+            <p>เจ้าชายแห่งท้องทะเลลึกผู้ลึกลับ ผู้มาพร้อมกับเรื่องเล่าปรัมปราและเสียงดนตรีจากก้นบึ้งของมหาสมุทร</p>
+        </header>
+
+        <section class="profile-details">
+            <h3>ข้อมูลส่วนตัว</h3>
+            <ul>
+                <li><strong>อายุ:</strong> 20 (ในโลกมนุษย์)</li>
+                <li><strong>วันเกิด:</strong> 25 ธันวาคม</li>
+                <li><strong>ถิ่นกำเนิด:</strong> อาณาจักรใต้สมุทรแอทแลนติส</li>
+                <li><strong>สีโปรด:</strong> น้ำเงินเข้ม, เขียวอมฟ้า, เงิน</li>
+                <li><strong>งานอดิเรก:</strong> ว่ายน้ำ, เล่นเปียโนแก้ว, สำรวจซากเรืออับปาง, เขียนบันทึกการเดินทาง</li>
+                <li><strong>ความสามารถพิเศษ:</strong> ควบคุมกระแสน้ำ, สื่อสารกับสิ่งมีชีวิตใต้ทะเล, มองเห็นในความมืด</li>
+                <li><strong>สโลแกน:</strong> "ดำดิ่งสู่ห้วงน้ำแห่งจินตนาการ ที่ซึ่งความลับแห่งมหาสมุทรรอคอยคุณ!"</li>
+            </ul>
+
+            <h3>ประวัติโดยละเอียด</h3>
+            <div class="profile-bio">
+                <p>Kaito Aqua คือทายาทแห่งอาณาจักรแอทแลนติสโบราณที่สาบสูญ เขาตัดสินใจขึ้นมายังโลกเบื้องบนด้วยความอยากรู้อยากเห็นในวัฒนธรรมของมนุษย์ และเพื่อค้นหา "เสียงเพลงที่หายไป" ซึ่งเป็นตำนานเก่าแก่ของเผ่าพันธุ์ของเขา</p>
+                <p>เขาใช้ชีวิตอยู่ท่ามกลางมนุษย์ในฐานะ VTuber โดยแบ่งปันเรื่องราวการผจญภัยใต้ทะเลลึก เสียงเพลงที่เขาบรรเลงจากเครื่องดนตรีแปลกๆ ที่ทำจากเปลือกหอย และความรู้เกี่ยวกับสิ่งมีชีวิตใต้ท้องทะเล Kaito เป็นคนเงียบขรึมและสุขุม แต่เมื่อได้พูดถึงเรื่องที่เขาสนใจ ดวงตาของเขาจะเปล่งประกายด้วยความกระตือรือร้น</p>
+                <p>เป้าหมายสูงสุดของ Kaito คือการรวบรวมชิ้นส่วนของ "บทเพลงแห่งหัวใจมหาสมุทร" ที่กระจัดกระจายไปทั่วโลก เพื่อนำความสมดุลกลับคืนสู่ทั้งโลกมนุษย์และอาณาจักรของเขา ทุกการสตรีมและทุกบทเพลงคือส่วนหนึ่งของการเดินทางอันยิ่งใหญ่นี้.</p>
+            </div>
+        </section>
+
+        <div class="back-button-container">
+            <a href="หน้าตัวละคร.html" class="back-button">กลับหน้าตัวละคร</a>
+        </div>
+
+        <footer class="mt-8 text-sm opacity-60 text-center">
+            &copy; 2025 VTuber Universe. สงวนลิขสิทธิ์
+        </footer>
+    </div>
+</body>
+</html>

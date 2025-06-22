@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VTuber Universe - ตัวละคร</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@400;700&family=Mali:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Kanit', sans-serif;
+            background: linear-gradient(180deg, #1a0a2a 0%, #3a1a5a 100%); /* Deeper purple gradient */
+            color: #e0e0e0;
+            margin: 0;
+            padding: 2rem 1rem;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: rgba(0, 0, 0, 0.4); /* Slightly transparent dark background */
+            backdrop-filter: blur(5px);
+            border-radius: 25px;
+            padding: 2rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            animation: fadeIn 1s ease-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+        .header h1 {
+            font-family: 'Mali', cursive; /* Playful font for title */
+            font-size: 4.5rem;
+            font-weight: 700;
+            color: #ffe4e1; /* Misty Rose for a softer look */
+            text-shadow: 0 0 20px rgba(255, 228, 225, 0.8);
+            letter-spacing: 3px;
+        }
+        .header p {
+            font-size: 1.4rem;
+            color: #ccc;
+            margin-top: 1rem;
+        }
+
+        .character-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2.5rem;
+        }
+
+        .character-link { /* New class for the anchor tag */
+            text-decoration: none; /* Remove underline from link */
+            color: inherit; /* Inherit text color */
+        }
+
+        .character-card {
+            background-color: rgba(50, 20, 80, 0.7); /* Darker purple transparent */
+            border-radius: 20px;
+            padding: 1.5rem;
+            text-align: center;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .character-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 12px 25px rgba(0, 0, 0, 0.5);
+        }
+
+        .character-image {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin: 0 auto 1.5rem;
+            border: 5px solid;
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.3);
+        }
+
+        .character-card h2 {
+            font-family: 'Mali', cursive;
+            font-size: 2.2rem;
+            font-weight: 700;
+            margin-bottom: 0.8rem;
+        }
+        .character-card p {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            margin-bottom: 1rem;
+        }
+        .character-card ul {
+            list-style: none;
+            padding: 0;
+            margin-top: 1rem;
+            font-size: 0.95rem;
+            opacity: 0.8;
+        }
+        .character-card ul li {
+            margin-bottom: 0.3rem;
+        }
+
+        /* Individual character styles/decorations */
+        .character-card.style-1 .character-image { border-color: #ff69b4; /* Hot Pink */ }
+        .character-card.style-1 h2 { color: #ff69b4; }
+        .character-card.style-1::before {
+            content: '✨';
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 2em;
+            opacity: 0.5;
+            animation: sparkle 2s infinite alternate;
+        }
+
+        .character-card.style-2 .character-image { border-color: #87ceeb; /* Sky Blue */ }
+        .character-card.style-2 h2 { color: #87ceeb; }
+        .character-card.style-2::after {
+            content: '🎵';
+            position: absolute;
+            bottom: 10px;
+            left: 10px;
+            font-size: 2em;
+            opacity: 0.5;
+            animation: rotateNote 3s linear infinite;
+        }
+
+        .character-card.style-3 .character-image { border-color: #98fb98; /* Pale Green */ }
+        .character-card.style-3 h2 { color: #98fb98; }
+        .character-card.style-3 {
+            background-image: linear-gradient(135deg, rgba(50, 20, 80, 0.7) 0%, rgba(30, 60, 40, 0.7) 100%);
+        }
+
+        .character-card.style-4 .character-image { border-color: #ffa07a; /* Light Salmon */ }
+        .character-card.style-4 h2 { color: #ffa07a; }
+        .character-card.style-4::before {
+            content: '⭐';
+            position: absolute;
+            top: 50%;
+            left: -20px;
+            transform: translateY(-50%) rotate(0deg);
+            font-size: 3em;
+            opacity: 0.3;
+            animation: floatStar 5s ease-in-out infinite;
+        }
+
+        .character-card.style-5 .character-image { border-color: #ffdead; /* Navajo White */ }
+        .character-card.style-5 h2 { color: #ffdead; }
+        .character-card.style-5 {
+            background-image: radial-gradient(circle at top right, rgba(50, 20, 80, 0.7) 0%, rgba(70, 0, 70, 0.7) 100%);
+        }
+
+        /* Animations for decorations */
+        @keyframes sparkle {
+            0% { transform: scale(1); opacity: 0.5; }
+            50% { transform: scale(1.2); opacity: 0.8; }
+            100% { transform: scale(1); opacity: 0.5; }
+        }
+        @keyframes rotateNote {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        @keyframes floatStar {
+            0% { left: -20px; transform: translateY(-50%) rotate(0deg); }
+            50% { left: calc(100% + 20px); transform: translateY(-50%) rotate(180deg); }
+            100% { left: -20px; transform: translateY(-50%) rotate(360deg); }
+        }
+
+
+        .back-button-container {
+            text-align: center;
+            margin-top: 3rem;
+        }
+        .back-button {
+            display: inline-block;
+            padding: 0.8rem 2rem;
+            background: linear-gradient(90deg, #ff69b4 0%, #da70d6 100%); /* Pink to Orchid gradient */
+            color: white;
+            border-radius: 30px;
+            text-decoration: none;
+            font-size: 1.1rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+        .back-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+            background: linear-gradient(90deg, #da70d6 0%, #ff69b4 100%); /* Reverse gradient on hover */
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .container {
+                padding: 1.5rem;
+            }
+            .header h1 {
+                font-size: 3.5rem;
+            }
+            .header p {
+                font-size: 1.2rem;
+            }
+            .character-grid {
+                gap: 1.5rem;
+            }
+            .character-card {
+                padding: 1rem;
+            }
+            .character-card h2 {
+                font-size: 1.8rem;
+            }
+            .character-card p {
+                font-size: 1rem;
+            }
+            .character-image {
+                width: 120px;
+                height: 120px;
+            }
+        }
+        @media (max-width: 480px) {
+            .container {
+                padding: 1rem;
+                border-radius: 15px;
+            }
+            .header h1 {
+                font-size: 2.5rem;
+            }
+            .header p {
+                font-size: 1rem;
+            }
+            .character-grid {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+            .character-image {
+                width: 100px;
+                height: 100px;
+            }
+            .character-card h2 {
+                font-size: 1.5rem;
+            }
+            .character-card p {
+                font-size: 0.9rem;
+            }
+            .back-button {
+                font-size: 1rem;
+                padding: 0.6rem 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>เหล่า VTuber ของเรา</h1>
+            <p>พบกับตัวตนและเรื่องราวอันเป็นเอกลักษณ์ของเหล่า VTuber ที่จะมาสร้างสีสันให้กับคุณ</p>
+        </header>
+
+        <div class="character-grid">
+            <!-- Character 1: Aria Starfall -->
+            <a href="aria.html" class="character-link">
+                <div class="character-card style-1">
+                    <img src="https://placehold.co/150x150/ff69b4/FFFFFF?text=Aria" alt="Aria Starfall" class="character-image">
+                    <h2>Aria Starfall</h2>
+                    <p>นักร้องสาวเสียงหวานจากดวงดาว ผู้มาพร้อมกับบทเพลงที่เปี่ยมไปด้วยมนต์ขลัง เธอสามารถสะกดผู้ฟังให้เคลิบเคลิ้มไปกับท่วงทำนองอันไพเราะ</p>
+                    <ul>
+                        <li><strong>อายุ:</strong> 17 (นิรันดร์)</li>
+                        <li><strong>วันเกิด:</strong> 7 กรกฎาคม</li>
+                        <li><strong>งานอดิเรก:</strong> ร้องเพลง, ดูดาว, แต่งกลอน</li>
+                        <li><strong>สโลแกน:</strong> "มาฟังเสียงเพลงแห่งดวงดาวกันเถอะ!"</li>
+                    </ul>
+                </div>
+            </a>
+
+            <!-- Character 2: Kaito Aqua -->
+            <a href="kaito.html" class="character-link">
+                <div class="character-card style-2">
+                    <img src="https://placehold.co/150x150/87ceeb/FFFFFF?text=Kaito" alt="Kaito Aqua" class="character-image">
+                    <h2>Kaito Aqua</h2>
+                    <p>เจ้าชายแห่งท้องทะเลลึกผู้ลึกลับ ผู้หลงใหลในเสียงดนตรีและเรื่องเล่าปรัมปรา เขามักจะนำพาทุกคนไปสู่โลกใต้บาดาลอันน่าอัศจรรย์</p>
+                    <ul>
+                        <li><strong>อายุ:</strong> 20 (ในโลกมนุษย์)</li>
+                        <li><strong>วันเกิด:</strong> 25 ธันวาคม</li>
+                        <li><strong>งานอดิเรก:</strong> ว่ายน้ำ, เล่นเปียโน, สำรวจซากเรือ</li>
+                        <li><strong>สโลแกน:</strong> "ดำดิ่งสู่ห้วงน้ำแห่งจินตนาการ!"</li>
+                    </ul>
+                </div>
+            </a>
+
+            <!-- Character 3: Luna Blossom -->
+            <a href="luna.html" class="character-link">
+                <div class="character-card style-3">
+                    <img src="https://placehold.co/150x150/98fb98/FFFFFF?text=Luna" alt="Luna Blossom" class="character-image">
+                    <h2>Luna Blossom</h2>
+                    <p>ภูตสาวแห่งป่าผู้ร่าเริงและสดใส เธอมีพลังในการเยียวยาและนำพาความสุขมาสู่ทุกคนด้วยรอยยิ้มอันบริสุทธิ์</p>
+                    <ul>
+                        <li><strong>อายุ:</strong> ไม่ระบุ (อ่อนเยาว์ตลอดกาล)</li>
+                        <li><strong>วันเกิด:</strong> 1 เมษายน</li>
+                        <li><strong>งานอดิเรก:</strong> ดูแลต้นไม้, ปรุงยา, เล่นกับสัตว์ป่า</li>
+                        <li><strong>สโลแกน:</strong> "เติบโตไปพร้อมกับธรรมชาติ!"</li>
+                    </ul>
+                </div>
+            </a>
+
+            <!-- Character 4: Blaze Phoenix -->
+            <a href="blaze.html" class="character-link">
+                <div class="character-card style-4">
+                    <img src="https://placehold.co/150x150/ffa07a/FFFFFF?text=Blaze" alt="Blaze Phoenix" class="character-image">
+                    <h2>Blaze Phoenix</h2>
+                    <p>นักรบเพลิงผู้กล้าหาญและเต็มไปด้วยความมุ่งมั่น เขาพร้อมที่จะผจญภัยและปกป้องความยุติธรรมในทุกสถานการณ์</p>
+                    <ul>
+                        <li><strong>อายุ:</strong> 22</li>
+                        <li><strong>วันเกิด:</strong> 15 พฤศจิกายน</li>
+                        <li><strong>งานอดิเรก:</strong> ฝึกดาบ, สร้างสรรค์เมนูเผ็ด, วิ่งมาราธอน</li>
+                        <li><strong>สโลแกน:</strong> "ลุกโชนไปด้วยพลังแห่งไฟ!"</li>
+                    </ul>
+                </div>
+            </a>
+
+            <!-- Character 5: Stella Nova -->
+            <a href="stella.html" class="character-link">
+                <div class="character-card style-5">
+                    <img src="https://placehold.co/150x150/ffdead/FFFFFF?text=Stella" alt="Stella Nova" class="character-image">
+                    <h2>Stella Nova</h2>
+                    <p>นักวิทยาศาสตร์สาวผู้ปราดเปรื่อง เธอรักการค้นคว้าและทดลองสิ่งใหม่ๆ เสมอ เพื่อไขปริศนาของจักรวาลอันกว้างใหญ่</p>
+                    <ul>
+                        <li><strong>อายุ:</strong> 19</li>
+                        <li><strong>วันเกิด:</strong> 12 กุมภาพันธ์</li>
+                        <li><strong>งานอดิเรก:</strong> ประดิษฐ์เครื่องมือ, อ่านหนังสือดาราศาสตร์, เล่นหมากรุก</li>
+                        <li><strong>สโลแกน:</strong> "ความรู้คือพลัง!"</li>
+                    </ul>
+                </div>
+            </a>
+        </div>
+
+        <div class="back-button-container">
+            <a href="หน้าแรก .html" class="back-button">กลับหน้าหลัก</a>
+        </div>
+
+        <footer class="mt-8 text-sm opacity-60 text-center">
+            &copy; 2025 VTuber Universe. สงวนลิขสิทธิ์
+        </footer>
+    </div>
+</body>
+</html>

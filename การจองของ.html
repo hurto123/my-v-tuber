@@ -1,0 +1,650 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VTuber Universe - จองกิจกรรม</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@400;700&family=Mali:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Kanit', sans-serif;
+            background: linear-gradient(180deg, #2a1a0a 0%, #4a2a1a 100%); /* Warm, earthy gradient for booking */
+            color: #f0e0d0; /* Soft light text color */
+            margin: 0;
+            padding: 2rem 1rem;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow-x: hidden;
+        }
+        .container {
+            max-width: 1000px; /* Increased max-width for more content */
+            width: 95%;
+            margin: 0 auto;
+            background-color: rgba(50, 20, 0, 0.75); /* Darker, slightly transparent background */
+            backdrop-filter: blur(10px);
+            border-radius: 25px;
+            padding: 3rem;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.6);
+            text-align: center;
+            animation: slideInUp 1s ease-out forwards;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        @keyframes slideInUp {
+            from { opacity: 0; transform: translateY(50px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .header {
+            margin-bottom: 3rem;
+        }
+        .header h1 {
+            font-family: 'Mali', cursive;
+            font-size: 3.5rem;
+            font-weight: 700;
+            color: #ffaa00; /* Bright orange for title */
+            text-shadow: 0 0 15px rgba(255, 170, 0, 0.7);
+            margin-bottom: 1.5rem;
+        }
+        .header p {
+            font-size: 1.1rem;
+            color: #d0c0b0;
+            margin-bottom: 2rem;
+            line-height: 1.6;
+        }
+
+        /* Removed .user-info styles */
+        /*
+        .user-info {
+            font-size: 0.9rem;
+            color: #bbb;
+            margin-bottom: 1rem;
+            text-align: left;
+            padding-left: 1rem;
+        }
+        .user-info span {
+            font-weight: bold;
+            color: #ffd700;
+        }
+        */
+        .loading-message, .error-message { /* Combined and kept for potential future use or debugging if needed */
+            display: none; /* Always hidden as data is hardcoded */
+        }
+
+
+        .booking-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); /* Adjusted grid for items */
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .booking-item-card {
+            background-color: rgba(70, 30, 0, 0.85); /* Slightly lighter background for cards */
+            border-radius: 15px;
+            padding: 1.5rem;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+            transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
+            cursor: pointer;
+            text-align: left;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            overflow: hidden;
+            position: relative;
+        }
+        .booking-item-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 25px rgba(0, 0, 0, 0.4);
+            background-color: rgba(90, 40, 0, 0.95);
+        }
+        .booking-item-card img {
+            width: 100%;
+            height: 180px; /* Fixed height for consistent image size */
+            object-fit: cover;
+            border-radius: 10px;
+            margin-bottom: 1rem;
+            border: 2px solid rgba(255, 255, 255, 0.1);
+        }
+        .booking-item-card h2 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #ffd700; /* Gold for item titles */
+            margin-bottom: 0.5rem;
+        }
+        .booking-item-card p {
+            font-size: 0.95rem;
+            color: #e0d0c0;
+            line-height: 1.5;
+        }
+        .booking-item-card .price {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #a8e063; /* Green for price */
+            margin-top: 0.8rem;
+            text-align: right;
+        }
+
+        /* Pagination Controls */
+        .pagination-controls {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 0.8rem;
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+        }
+        .pagination-button {
+            background-color: rgba(90, 40, 0, 0.8);
+            color: #f0e0d0;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            padding: 0.6rem 1rem;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .pagination-button:hover:not(:disabled),
+        .pagination-button.active {
+            background-color: #ffaa00;
+            color: #2a1a0a;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+            transform: translateY(-2px);
+        }
+        .pagination-button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+
+        /* Modal Styles */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7); /* Darker, more opaque overlay */
+            backdrop-filter: blur(8px);
+            z-index: 1000; /* High z-index to cover everything */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+        .modal-overlay.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal-content {
+            background-color: rgba(50, 20, 0, 0.95); /* Even darker, almost opaque for modal */
+            border-radius: 20px;
+            padding: 2.5rem;
+            max-width: 700px;
+            width: 90%;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.8);
+            position: relative;
+            transform: scale(0.9);
+            transition: transform 0.3s ease;
+            border: 2px solid #ffaa00; /* Orange border */
+        }
+        .modal-overlay.show .modal-content {
+            transform: scale(1);
+        }
+
+        .modal-close-button {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: none;
+            border: none;
+            color: #f0e0d0;
+            font-size: 2rem;
+            cursor: pointer;
+            transition: color 0.2s ease;
+        }
+        .modal-close-button:hover {
+            color: #ffaa00;
+        }
+
+        .modal-image {
+            width: 100%;
+            max-height: 350px;
+            object-fit: cover;
+            border-radius: 15px;
+            margin-bottom: 1.5rem;
+            border: 2px solid rgba(255, 255, 255, 0.1);
+        }
+        .modal-title {
+            font-family: 'Mali', cursive;
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #ffd700;
+            margin-bottom: 1rem;
+        }
+        .modal-description {
+            font-size: 1.1rem; /* Adjusted from 1rem */
+            color: #e0d0c0;
+            line-height: 1.7;
+            text-align: justify;
+            margin-bottom: 1.5rem;
+        }
+        .modal-price {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #a8e063;
+            margin-bottom: 2rem;
+            text-align: right;
+        }
+
+        .modal-book-button {
+            display: inline-block;
+            padding: 1rem 2.5rem;
+            background: linear-gradient(90deg, #ff7f50 0%, #ff6347 100%);
+            color: white;
+            border-radius: 30px;
+            text-decoration: none;
+            font-size: 1.2rem;
+            font-weight: 700;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            border: none;
+            cursor: pointer;
+        }
+        .modal-book-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+            background: linear-gradient(90deg, #ff6347 0%, #ff7f50 100%);
+        }
+
+        .back-button-container {
+            margin-top: 3rem;
+            text-align: center;
+        }
+        .back-button {
+            display: inline-block;
+            padding: 0.8rem 2rem;
+            background: linear-gradient(90deg, #ffa07a 0%, #ff7f50 100%);
+            color: white;
+            border-radius: 30px;
+            text-decoration: none;
+            font-size: 1.1rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            border: none;
+            cursor: pointer;
+        }
+        .back-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+            background: linear-gradient(90deg, #ff6347 0%, #ff7f50 100%);
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .container {
+                padding: 2rem;
+                width: 90%;
+            }
+            .header h1 {
+                font-size: 3rem;
+            }
+            .header p {
+                font-size: 1rem;
+            }
+            .booking-grid {
+                grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+                gap: 1.5rem;
+            }
+            .booking-item-card {
+                padding: 1rem;
+            }
+            .booking-item-card img {
+                height: 150px;
+            }
+            .booking-item-card h2 {
+                font-size: 1.3rem;
+            }
+            .booking-item-card p {
+                font-size: 0.85rem;
+            }
+            .booking-item-card .price {
+                font-size: 1rem;
+            }
+            .pagination-button {
+                padding: 0.5rem 0.8rem;
+                font-size: 0.9rem;
+            }
+            .modal-content {
+                padding: 2rem;
+            }
+            .modal-title {
+                font-size: 2rem;
+            }
+            .modal-description {
+                font-size: 0.9rem;
+            }
+            .modal-price {
+                font-size: 1.1rem;
+            }
+            .modal-book-button {
+                padding: 0.8rem 2rem;
+                font-size: 1rem;
+            }
+        }
+        @media (max-width: 480px) {
+            .container {
+                padding: 1.5rem;
+                border-radius: 20px;
+            }
+            .header h1 {
+                font-size: 2.5rem;
+            }
+            .header p {
+                font-size: 0.9rem;
+            }
+            .booking-grid {
+                grid-template-columns: 1fr; /* Single column on very small screens */
+                gap: 1rem;
+            }
+            .booking-item-card img {
+                height: 120px;
+            }
+            .pagination-button {
+                padding: 0.4rem 0.6rem;
+                font-size: 0.8rem;
+            }
+            .modal-content {
+                padding: 1.5rem;
+            }
+            .modal-title {
+                font-size: 1.8rem;
+            }
+            .modal-description {
+                font-size: 0.8rem;
+            }
+            .modal-price {
+                font-size: 1rem;
+            }
+            .modal-book-button {
+                padding: 0.7rem 1.8rem;
+                font-size: 0.9rem;
+            }
+            .back-button {
+                font-size: 1rem;
+                padding: 0.7rem 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>จองกิจกรรมพิเศษ</h1>
+            <p>เตรียมตัวพบกับประสบการณ์สุดพิเศษกับเหล่า VTuber ที่คุณชื่นชอบ!</p>
+        </header>
+
+        <!-- Removed user-info div as Firebase is no longer used -->
+        <!--
+        <div class="user-info" id="user-info">
+            <p>สถานะ: <span id="auth-status">กำลังเชื่อมต่อ...</span></p>
+            <p>UID: <span id="user-id-display">N/A</span></p>
+            <p>Firebase Region: <span id="firebase-region-display">N/A</span></p>
+        </div>
+        -->
+
+        <section class="booking-grid" id="booking-items-grid">
+            <!-- Booking items will be populated by JavaScript -->
+            <!-- Removed loading and error messages as data is hardcoded -->
+            <!--
+            <div id="loading-items-message" class="loading-message">กำลังโหลดกิจกรรม...</div>
+            <div id="error-loading-message" class="error-message hidden">เกิดข้อผิดพลาดในการโหลดกิจกรรม กรุณาลองใหม่ภายหลัง</div>
+            -->
+        </section>
+
+        <!-- Pagination Controls -->
+        <div class="pagination-controls" id="pagination-controls">
+            <button id="prev-page-button" class="pagination-button">&laquo; ก่อนหน้า</button>
+            <div id="page-numbers" class="flex gap-2">
+                <!-- Page numbers will be populated by JavaScript -->
+            </div>
+            <button id="next-page-button" class="pagination-button">ถัดไป &raquo;</button>
+        </div>
+
+        <div class="back-button-container">
+            <a href="หน้าแรก .html" class="back-button">กลับหน้าหลัก</a>
+        </div>
+
+        <footer class="mt-8 text-sm opacity-60 text-center">
+            &copy; 2025 VTuber Universe. สงวนลิขสิทธิ์
+        </footer>
+    </div>
+
+    <!-- Booking Detail Modal (ช่องใหญ่) -->
+    <div class="modal-overlay" id="booking-detail-modal">
+        <div class="modal-content">
+            <button class="modal-close-button" id="modal-close-button">&times;</button>
+            <img src="" alt="Item Image" class="modal-image" id="modal-image">
+            <h2 class="modal-title" id="modal-title"></h2>
+            <p class="modal-description" id="modal-description"></p>
+            <div class="modal-price" id="modal-price"></div>
+            <a href="#" target="_blank" class="modal-book-button" id="modal-book-button">จองสินค้าตอนนี้!</a>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const bookingItemsGrid = document.getElementById('booking-items-grid');
+            const modalOverlay = document.getElementById('booking-detail-modal');
+            const modalCloseButton = document.getElementById('modal-close-button');
+            const modalImage = document.getElementById('modal-image');
+            const modalTitle = document.getElementById('modal-title');
+            const modalDescription = document.getElementById('modal-description');
+            const modalPrice = document.getElementById('modal-price');
+            const modalBookButton = document.getElementById('modal-book-button');
+
+            const paginationControls = document.getElementById('pagination-controls');
+            const prevPageButton = document.getElementById('prev-page-button');
+            const nextPageButton = document.getElementById('next-page-button');
+            const pageNumbersDiv = document.getElementById('page-numbers');
+
+            // Removed references to loading and error messages as Firebase is removed
+            // const loadingItemsMessage = document.getElementById('loading-items-message');
+            // const errorLoadingMessage = document.getElementById('error-loading-message');
+            
+            // Removed Firebase related DOM elements
+            // const authStatus = document.getElementById('auth-status');
+            // const userIdDisplay = document.getElementById('user-id-display');
+            // const firebaseRegionDisplay = document.getElementById('firebase-region-display');
+
+            // --- Hardcoded Data for Booking Items (แก้ไขข้อมูลตรงนี้ได้เลย) ---
+            const bookingItems = [
+                {
+                    id: 'fanmeet_aria_1',
+                    name: 'Exclusive Fan Meet with Aria Starfall (รอบที่ 1)',
+                    shortDesc: 'โอกาสพิเศษที่จะได้พบปะและพูดคุยกับ Aria อย่างใกล้ชิด! จำกัดเพียง 10 ท่านเท่านั้น',
+                    longDesc: 'เข้าร่วมกิจกรรม Fan Meeting สุดพิเศษกับ Aria Starfall ที่จะจัดขึ้นแบบออนไลน์! คุณจะได้มีโอกาสพูดคุย ถามคำถาม และทำกิจกรรมสนุกๆ ร่วมกับ Aria ในบรรยากาศเป็นกันเอง พร้อมรับของที่ระลึกพิเศษสำหรับผู้เข้าร่วมทุกท่าน กิจกรรมจะจัดขึ้นในวันที่ 15 กรกฎาคม 2568 เวลา 19:00 น. (ตามเวลาประเทศไทย) ผ่านแพลตฟอร์ม Zoom',
+                    price: '500 บาท',
+                    imageUrl: 'https://placehold.co/400x200/ff69b4/FFFFFF?text=Aria+Meet+1',
+                    googleFormUrl: 'https://docs.google.com/forms/d/e/1FAIpQLScz3a9sJ1wN_P0p_Yg_U1-aB-B-W-c-V-z-Q/viewform?usp=sf_link' // เปลี่ยนเป็น URL Google Form ของกิจกรรม
+                },
+                {
+                    id: 'gaming_kaito_1',
+                    name: 'Gaming Session with Kaito Aqua (รอบที่ 1)',
+                    shortDesc: 'มันส์ไปกับการเล่นเกมกับ Kaito Aqua ในเกมสุดฮิต! รับจำนวนจำกัด!',
+                    longDesc: 'ชวนคุณมาท้าทายฝีมือการเล่นเกมกับ Kaito Aqua ในเกมออนไลน์ยอดนิยม! ร่วมทีมหรือแข่งขันกับ Kaito และเพื่อนๆ VTuber คนอื่นๆ สัมผัสประสบการณ์การเล่นเกมที่ไม่เหมือนใคร พร้อมเสียงหัวเราะและความบันเทิงเต็มรูปแบบ กิจกรรมจะจัดขึ้นในวันที่ 20 กรกฎาคม 2568 เวลา 20:00 น. (ตามเวลาประเทศไทย)',
+                    price: '300 บาท',
+                    imageUrl: 'https://placehold.co/400x200/87ceeb/FFFFFF?text=Kaito+Game+1',
+                    googleFormUrl: 'https://docs.google.com/forms/d/e/1FAIpQLSdp-W-J_X_Yg_U1-aB-B-W-c-V-z-Q/viewform?usp=sf_link' // เปลี่ยนเป็น URL Google Form ของกิจกรรม
+                },
+                {
+                    id: 'cooking_luna_1',
+                    name: 'Online Cooking Class with Luna Blossom (รอบที่ 1)',
+                    shortDesc: 'มาเรียนทำขนมสูตรพิเศษจาก Luna Blossom แบบออนไลน์กันเถอะ!',
+                    longDesc: 'เรียนรู้การทำขนมหวานแสนอร่อยตามสูตรลับของ Luna Blossom ที่ส่งตรงจากป่าแห่งเวทมนตร์! คลาสเรียนออนไลน์นี้จะสอนคุณทุกขั้นตอน ตั้งแต่การเลือกวัตถุดิบไปจนถึงเทคนิคการตกแต่งขนมให้สวยงาม เหมาะสำหรับผู้เริ่มต้นและผู้ที่ชื่นชอบการทำขนม กิจกรรมจะจัดขึ้นในวันที่ 25 กรกฎาคม 2568 เวลา 14:00 น. (ตามเวลาประเทศไทย)',
+                    price: '450 บาท',
+                    imageUrl: 'https://placehold.co/400x200/98fb98/FFFFFF?text=Luna+Cook+1',
+                    googleFormUrl: 'https://docs.google.com/forms/d/e/1FAIpQLSfp_Z_V-A_X_Yg_U1-aB-B-W-c-V-z-Q/viewform?usp=sf_link' // เปลี่ยนเป็น URL Google Form ของกิจกรรม
+                },
+                {
+                    id: 'art_stella_1',
+                    name: 'Digital Art Workshop with Stella Nova (รอบที่ 1)',
+                    shortDesc: 'ปลดปล่อยความคิดสร้างสรรค์ไปกับการวาดภาพดิจิทัลกับ Stella Nova!',
+                    longDesc: 'เรียนรู้พื้นฐานและเทคนิคการวาดภาพดิจิทัลกับ Stella Nova นักวิทยาศาสตร์และศิลปินของเรา! เวิร์คช็อปนี้จะครอบคลุมตั้งแต่การใช้โปรแกรมวาดภาพเบื้องต้น เทคนิคการลงสี และการสร้างงานศิลปะในสไตล์ Cyberpunk ที่เป็นเอกลักษณ์ของ Stella เหมาะสำหรับผู้ที่สนใจงานศิลปะดิจิทัลทุกระดับ กิจกรรมจะจัดขึ้นในวันที่ 30 กรกฎาคม 2568 เวลา 19:30 น. (ตามเวลาประเทศไทย)',
+                    price: '600 บาท',
+                    imageUrl: 'https://placehold.co/400x200/ffdead/FFFFFF?text=Stella+Art+1',
+                    googleFormUrl: 'https://docs.google.com/forms/d/e/1FAIpQLSe-Z_V-A_X_Yg_U1-aB-B-W-c-V-z-Q/viewform?usp=sf_link' // เปลี่ยนเป็น URL Google Form ของกิจกรรม
+                },
+                {
+                    id: 'fanmeet_aria_2',
+                    name: 'Exclusive Fan Meet with Aria Starfall (รอบที่ 2)',
+                    shortDesc: 'โอกาสพิเศษที่จะได้พบปะและพูดคุยกับ Aria อย่างใกล้ชิด! รอบที่สอง!',
+                    longDesc: 'เข้าร่วมกิจกรรม Fan Meeting สุดพิเศษกับ Aria Starfall รอบที่ 2! คุณจะได้มีโอกาสพูดคุย ถามคำถาม และทำกิจกรรมสนุกๆ ร่วมกับ Aria ในบรรยากาศเป็นกันเอง พร้อมรับของที่ระลึกพิเศษ กิจกรรมจะจัดขึ้นในวันที่ 1 สิงหาคม 2568 เวลา 19:00 น. (ตามเวลาประเทศไทย) ผ่านแพลตฟอร์ม Zoom',
+                    price: '500 บาท',
+                    imageUrl: 'https://placehold.co/400x200/ff69b4/FFFFFF?text=Aria+Meet+2',
+                    googleFormUrl: 'https://docs.google.com/forms/d/e/1FAIpQLScz3a9sJ1wN_P0p_Yg_U1-aB-B-W-c-V-z-Q/viewform?usp=sf_link' // เปลี่ยนเป็น URL Google Form ของกิจกรรม
+                },
+                {
+                    id: 'gaming_kaito_2',
+                    name: 'Gaming Session with Kaito Aqua (รอบที่ 2)',
+                    shortDesc: 'มันส์ไปกับการเล่นเกมกับ Kaito Aqua ในเกมสุดฮิต! รอบที่สอง!',
+                    longDesc: 'ชวนคุณมาท้าทายฝีมือการเล่นเกมกับ Kaito Aqua รอบที่ 2! ร่วมทีมหรือแข่งขันกับ Kaito และเพื่อนๆ VTuber คนอื่นๆ กิจกรรมจะจัดขึ้นในวันที่ 5 สิงหาคม 2568 เวลา 20:00 น. (ตามเวลาประเทศไทย)',
+                    price: '300 บาท',
+                    imageUrl: 'https://placehold.co/400x200/87ceeb/FFFFFF?text=Kaito+Game+2',
+                    googleFormUrl: 'https://docs.google.com/forms/d/e/1FAIpQLSdp-W-J_X_Yg_U1-aB-B-W-c-V-z-Q/viewform?usp=sf_link' // เปลี่ยนเป็น URL Google Form ของกิจกรรม
+                },
+                {
+                    id: 'merch_limited_edition_1',
+                    name: 'เสื้อยืดลิมิเต็ดเอดิชั่น (ลายที่ 1)',
+                    shortDesc: 'เสื้อยืดคอลเลคชั่นพิเศษ ลาย Chibi สุดน่ารัก! Limited Edition!',
+                    longDesc: 'เสื้อยืด VTuber Universe Limited Edition ลาย "Starlight Aria" ผลิตจากผ้าคอตตอน 100% เนื้อนุ่ม สวมใส่สบาย พิมพ์ลาย Chibi Aria สุดน่ารักที่ออกแบบมาเป็นพิเศษสำหรับคอลเลคชั่นนี้เท่านั้น! มีให้เลือกหลายขนาด (S, M, L, XL) พร้อมกล่องสะสมดีไซน์พิเศษ จำนวนจำกัด! รีบจองก่อนหมด!',
+                    price: '850 บาท',
+                    imageUrl: 'https://placehold.co/400x200/d7a0ff/FFFFFF?text=Merch+1',
+                    googleFormUrl: 'https://docs.google.com/forms/d/e/1FAIpQLScz3a9sJ1wN_P0p_Yg_U1-aB-B-W-c-V-z-Q/viewform?usp=sf_link' // เปลี่ยนเป็น URL Google Form ของสินค้า
+                },
+                {
+                    id: 'merch_keychain_set_1',
+                    name: 'ชุดพวงกุญแจ VTuber (เซ็ต A)',
+                    shortDesc: 'พวงกุญแจ Chibi VTuber Set A สุดคิวท์! ครบเซ็ต 5 ตัวละคร!',
+                    longDesc: 'สะสมความน่ารักของเหล่า VTuber Universe ด้วยชุดพวงกุญแจ Chibi VTuber Set A ประกอบด้วยพวงกุญแจตัวละคร Aria, Kaito, Luna, Blaze และ Stella ผลิตจากอะคริลิคคุณภาพสูง สีสันสดใส น่ารักน่าสะสม เหมาะสำหรับห้อยกระเป๋า หรือตกแต่งโต๊ะทำงานของคุณ ชุดนี้มีจำนวนจำกัด!',
+                    price: '690 บาท',
+                    imageUrl: 'https://placehold.co/400x200/ffd7a0/FFFFFF?text=Keychain+Set+A',
+                    googleFormUrl: 'https://docs.google.com/forms/d/e/1FAIpQLScz3a9sJ1wN_P0p_Yg_U1-aB-B-W-c-V-z-Q/viewform?usp=sf_link' // เปลี่ยนเป็น URL Google Form ของสินค้า
+                }
+            ];
+
+            const itemsPerPage = 4; // จำนวนรายการต่อหน้า
+            let currentPage = 1;
+
+            // Function to display items for the current page
+            function displayItems(page) {
+                currentPage = page;
+                const startIndex = (currentPage - 1) * itemsPerPage;
+                const endIndex = startIndex + itemsPerPage;
+                const itemsToDisplay = bookingItems.slice(startIndex, endIndex);
+
+                bookingItemsGrid.innerHTML = ''; // Clear existing content
+                if (itemsToDisplay.length === 0 && bookingItems.length > 0) {
+                    // If no items on current page but there are items in total, go to first page
+                    currentPage = 1;
+                    displayItems(currentPage);
+                    return;
+                }
+
+                itemsToDisplay.forEach(item => {
+                    const card = document.createElement('div');
+                    card.classList.add('booking-item-card');
+                    card.dataset.itemId = item.id;
+
+                    card.innerHTML = `
+                        <img src="${item.imageUrl}" alt="${item.name}" onerror="this.onerror=null;this.src='https://placehold.co/400x200/500050/FFFFFF?text=Image+Error';">
+                        <h2>${item.name}</h2>
+                        <p>${item.shortDesc}</p>
+                        <div class="price">ราคา: ${item.price}</div>
+                    `;
+                    bookingItemsGrid.appendChild(card);
+
+                    // Add click event listener to each card
+                    card.addEventListener('click', () => {
+                        openModal(item);
+                    });
+                });
+                setupPagination(); // Re-render pagination controls
+            }
+
+            // Function to set up pagination controls
+            function setupPagination() {
+                const totalPages = Math.ceil(bookingItems.length / itemsPerPage);
+                pageNumbersDiv.innerHTML = ''; // Clear previous page numbers
+
+                // Previous Button
+                prevPageButton.disabled = currentPage === 1;
+                prevPageButton.onclick = () => {
+                    if (currentPage > 1) {
+                        displayItems(currentPage - 1);
+                    }
+                };
+
+                // Page Number Buttons
+                for (let i = 1; i <= totalPages; i++) {
+                    const pageButton = document.createElement('button');
+                    pageButton.classList.add('pagination-button');
+                    if (i === currentPage) {
+                        pageButton.classList.add('active');
+                    }
+                    pageButton.textContent = i;
+                    pageButton.onclick = () => {
+                        displayItems(i);
+                    };
+                    pageNumbersDiv.appendChild(pageButton);
+                }
+
+                // Next Button
+                nextPageButton.disabled = currentPage === totalPages;
+                nextPageButton.onclick = () => {
+                    if (currentPage < totalPages) {
+                        displayItems(currentPage + 1);
+                    }
+                };
+            }
+
+
+            // Function to open the modal and populate content
+            function openModal(item) {
+                modalImage.src = item.imageUrl;
+                modalImage.alt = item.name;
+                modalImage.onerror = function() { this.onerror=null; this.src='https://placehold.co/400x350/500050/FFFFFF?text=Image+Error'; }; // Fallback for modal image
+                modalTitle.textContent = item.name;
+                modalDescription.textContent = item.longDesc;
+                modalPrice.textContent = `ราคา: ${item.price}`;
+                modalBookButton.href = item.googleFormUrl; // Set Google Form URL
+
+                modalOverlay.classList.add('show');
+                document.body.style.overflow = 'hidden'; // Prevent scrolling background
+            }
+
+            // Function to close the modal
+            function closeModal() {
+                modalOverlay.classList.remove('show');
+                document.body.style.overflow = ''; // Restore scrolling
+            }
+
+            // Event listener for modal close button
+            modalCloseButton.addEventListener('click', closeModal);
+
+            // Close modal when clicking outside of the content (on the overlay)
+            modalOverlay.addEventListener('click', (event) => {
+                if (event.target === modalOverlay) {
+                    closeModal();
+                }
+            });
+
+            // Initial call to display items when page loads
+            displayItems(currentPage); 
+        });
+    </script>

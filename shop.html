@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VTuber Universe - ร้านค้า</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@400;700&family=Mali:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Kanit', sans-serif;
+            background: linear-gradient(180deg, #2a0a20 0%, #4a1a30 100%); /* Dark red-purple gradient */
+            color: #ffe0e0;
+            margin: 0;
+            padding: 2rem 1rem;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow-x: hidden;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: rgba(70, 20, 30, 0.7); /* Darker transparent red-purple background */
+            backdrop-filter: blur(7px);
+            border-radius: 25px;
+            padding: 3rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            text-align: center;
+            animation: fadeInFromBottom 0.8s ease-out forwards; /* Entry animation */
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        @keyframes fadeInFromBottom {
+            from { opacity: 0; transform: translateY(50px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .header h1 {
+            font-family: 'Mali', cursive;
+            font-size: 4rem;
+            font-weight: 700;
+            color: #ffa07a; /* Light Salmon */
+            text-shadow: 0 0 15px rgba(255, 160, 122, 0.7);
+            margin-bottom: 1.5rem;
+        }
+        .header p {
+            font-size: 1.2rem;
+            color: #ccc;
+            margin-bottom: 2rem;
+            line-height: 1.7;
+        }
+
+        .placeholder-content {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            color: #d0d0d0;
+            margin-bottom: 2.5rem;
+            text-align: justify;
+        }
+        .placeholder-content p {
+            margin-bottom: 1.5rem;
+            text-indent: 2rem;
+        }
+
+        .back-button-container {
+            margin-top: 3rem;
+            text-align: center;
+        }
+        .back-button {
+            display: inline-block;
+            padding: 0.9rem 2.5rem;
+            background: linear-gradient(90deg, #ffa07a 0%, #ff7f50 100%); /* Light Salmon to Coral */
+            color: white;
+            border-radius: 35px;
+            text-decoration: none;
+            font-size: 1.2rem;
+            font-weight: 700;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            border: none;
+            cursor: pointer;
+        }
+        .back-button:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5);
+            background: linear-gradient(90deg, #ff7f50 0%, #ffa07a 100%);
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .container {
+                padding: 2rem;
+            }
+            .header h1 {
+                font-size: 3rem;
+            }
+            .header p {
+                font-size: 1rem;
+            }
+            .placeholder-content {
+                font-size: 1rem;
+            }
+            .back-button {
+                padding: 0.8rem 2rem;
+                font-size: 1.1rem;
+            }
+        }
+        @media (max-width: 480px) {
+            .container {
+                padding: 1.5rem;
+                border-radius: 20px;
+            }
+            .header h1 {
+                font-size: 2.2rem;
+            }
+            .header p {
+                font-size: 0.9rem;
+            }
+            .placeholder-content {
+                font-size: 0.9rem;
+            }
+            .back-button {
+                padding: 0.7rem 1.8rem;
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>ร้านค้า VTuber Universe</h1>
+            <p>สินค้าและของที่ระลึกสุดพิเศษจากเหล่า VTuber ที่คุณชื่นชอบ</p>
+        </header>
+
+        <section class="placeholder-content">
+            <p>ยินดีต้อนรับสู่ร้านค้า VTuber Universe ครับ! หน้านี้กำลังอยู่ระหว่างการจัดเตรียมสินค้าและของที่ระลึกสุดพิเศษจากเหล่า VTuber ของเรา ไม่ว่าจะเป็นสินค้า Official, ของสะสม Limited Edition, หรือแม้แต่บริการจองกิจกรรมพิเศษต่างๆ</p>
+            <p>เรามุ่งมั่นที่จะนำเสนอสินค้าคุณภาพดีที่แฟนๆ ทุกคนจะต้องหลงรัก เพื่อให้คุณได้ใกล้ชิดกับ VTuber ที่คุณชื่นชอบมากยิ่งขึ้น</p>
+            <p>โปรดอดใจรออีกสักครู่เพื่อพบกับคอลเลกชันสินค้าเต็มรูปแบบที่จะเปิดตัวในเร็วๆ นี้! ท่านสามารถติดตามข่าวสารการเปิดตัวร้านค้าและโปรโมชันพิเศษได้ทางหน้า "ข่าวสารล่าสุด" และโซเชียลมีเดียของเราครับ</p>
+        </section>
+
+        <div class="back-button-container">
+            <a href="หน้าแรก .html" class="back-button">กลับหน้าหลัก</a>
+        </div>
+
+        <footer class="mt-8 text-sm opacity-60 text-center">
+            &copy; 2025 VTuber Universe. สงวนลิขสิทธิ์
+        </footer>
+    </div>
+</body>
+</html>

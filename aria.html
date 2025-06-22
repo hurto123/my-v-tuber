@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aria Starfall - VTuber Profile</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@400;700&family=Mali:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Kanit', sans-serif;
+            background: linear-gradient(180deg, #2a0a3a 0%, #4a1a6a 100%); /* Deep purple-pink gradient */
+            color: #ffe4e1; /* Misty Rose */
+            margin: 0;
+            padding: 2rem 1rem;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow-x: hidden;
+        }
+        .profile-container {
+            max-width: 900px;
+            margin: 0 auto;
+            background-color: rgba(60, 0, 80, 0.7); /* Darker transparent background */
+            backdrop-filter: blur(8px);
+            border-radius: 30px;
+            padding: 3rem;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.6);
+            text-align: center;
+            animation: slideInFromLeft 0.8s ease-out forwards; /* Entry animation */
+            position: relative;
+            border: 2px solid #ff69b4; /* Hot Pink border */
+            overflow: hidden;
+        }
+        @keyframes slideInFromLeft {
+            from { opacity: 0; transform: translateX(-100px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+        /* Sparkle background effect */
+        .profile-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('https://placehold.co/50x50/ff69b4/FFFFFF?text=%E2%9C%A6') repeat; /* Pink star placeholder */
+            opacity: 0.1;
+            animation: sparkleBackground 30s linear infinite;
+        }
+        @keyframes sparkleBackground {
+            from { background-position: 0 0; }
+            to { background-position: 100% 100%; }
+        }
+
+        .profile-header h1 {
+            font-family: 'Mali', cursive;
+            font-size: 4.5rem;
+            font-weight: 700;
+            color: #ff69b4; /* Hot Pink */
+            text-shadow: 0 0 25px rgba(255, 105, 180, 0.8);
+            margin-bottom: 1.5rem;
+            position: relative;
+            z-index: 1;
+        }
+        .profile-header p {
+            font-size: 1.3rem;
+            color: #f0f0f0;
+            margin-bottom: 2rem;
+            line-height: 1.7;
+            position: relative;
+            z-index: 1;
+        }
+        .profile-image {
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin: 0 auto 2rem;
+            border: 7px solid #ff69b4; /* Hot Pink border */
+            box-shadow: 0 0 25px rgba(255, 105, 180, 0.7);
+            animation: pulseGlow 2s infinite alternate;
+            position: relative;
+            z-index: 1;
+        }
+        @keyframes pulseGlow {
+            from { box-shadow: 0 0 15px rgba(255, 105, 180, 0.7); }
+            to { box-shadow: 0 0 30px rgba(255, 105, 180, 1), 0 0 40px rgba(255, 105, 180, 0.5); }
+        }
+
+        .profile-details {
+            text-align: left;
+            margin-top: 2rem;
+            font-size: 1.1rem;
+            line-height: 1.8;
+            position: relative;
+            z-index: 1;
+        }
+        .profile-details h3 {
+            font-family: 'Mali', cursive;
+            font-size: 2rem;
+            color: #ffb6c1; /* Light Pink */
+            margin-bottom: 1rem;
+            border-bottom: 2px solid rgba(255, 182, 193, 0.5);
+            padding-bottom: 0.5rem;
+        }
+        .profile-details ul {
+            list-style: none;
+            padding: 0;
+            margin-bottom: 2rem;
+        }
+        .profile-details ul li {
+            margin-bottom: 0.8rem;
+            padding-left: 1.5rem;
+            position: relative;
+        }
+        .profile-details ul li::before {
+            content: '🎵'; /* Music note bullet */
+            position: absolute;
+            left: 0;
+            color: #ff69b4;
+        }
+        .profile-bio {
+            text-align: justify;
+            margin-top: 2rem;
+        }
+        .profile-bio p {
+            margin-bottom: 1.5rem;
+            text-indent: 2rem;
+        }
+
+        .back-button-container {
+            margin-top: 3rem;
+            text-align: center;
+            position: relative;
+            z-index: 1;
+        }
+        .back-button {
+            display: inline-block;
+            padding: 0.9rem 2.5rem;
+            background: linear-gradient(90deg, #ff69b4 0%, #ff4d88 100%); /* Hot Pink to brighter pink */
+            color: white;
+            border-radius: 35px;
+            text-decoration: none;
+            font-size: 1.2rem;
+            font-weight: 700;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            border: none;
+            cursor: pointer;
+        }
+        .back-button:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5), 0 0 25px rgba(255, 105, 180, 0.8);
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .profile-container {
+                padding: 2rem;
+            }
+            .profile-header h1 {
+                font-size: 3.5rem;
+            }
+            .profile-header p {
+                font-size: 1.1rem;
+            }
+            .profile-image {
+                width: 160px;
+                height: 160px;
+            }
+            .profile-details h3 {
+                font-size: 1.8rem;
+            }
+            .profile-details, .profile-bio {
+                font-size: 1rem;
+            }
+            .back-button {
+                padding: 0.8rem 2rem;
+                font-size: 1.1rem;
+            }
+        }
+        @media (max-width: 480px) {
+            .profile-container {
+                padding: 1.5rem;
+                border-radius: 20px;
+            }
+            .profile-header h1 {
+                font-size: 2.8rem;
+            }
+            .profile-header p {
+                font-size: 0.9rem;
+            }
+            .profile-image {
+                width: 120px;
+                height: 120px;
+                margin-bottom: 1.5rem;
+            }
+            .profile-details h3 {
+                font-size: 1.5rem;
+            }
+            .profile-details, .profile-bio {
+                font-size: 0.9rem;
+            }
+            .back-button {
+                padding: 0.7rem 1.8rem;
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="profile-container">
+        <header class="profile-header">
+            <img src="https://placehold.co/200x200/ff69b4/FFFFFF?text=Aria" alt="Aria Starfall" class="profile-image">
+            <h1>Aria Starfall</h1>
+            <p>นักร้องสาวเสียงหวานจากดวงดาว ผู้มาพร้อมกับบทเพลงที่เปี่ยมไปด้วยมนต์ขลัง เธอคือเสียงสะท้อนแห่งความฝันและแรงบันดาลใจ</p>
+        </header>
+
+        <section class="profile-details">
+            <h3>ข้อมูลส่วนตัว</h3>
+            <ul>
+                <li><strong>อายุ:</strong> 17 (นิรันดร์)</li>
+                <li><strong>วันเกิด:</strong> 7 กรกฎาคม</li>
+                <li><strong>กลุ่มดาว:</strong> ลิรา (Lyra)</li>
+                <li><strong>สีโปรด:</strong> ชมพู, ทอง, ฟ้าคราม</li>
+                <li><strong>งานอดิเรก:</strong> ร้องเพลง, ดูดาว, แต่งกลอน, ทำขนมกาแล็กซี</li>
+                <li><strong>ความสามารถพิเศษ:</strong> สามารถสื่อสารกับดวงดาว, สร้างภาพลวงตาจากเสียงเพลง</li>
+                <li><strong>สโลแกน:</strong> "มาฟังเสียงเพลงแห่งดวงดาวกันเถอะ! ให้มันนำทางคุณไปสู่ความฝันอันแสนไกล"</li>
+            </ul>
+
+            <h3>ประวัติโดยละเอียด</h3>
+            <div class="profile-bio">
+                <p>Aria Starfall ไม่ใช่ VTuber ธรรมดา เธอเป็นนักร้องสาวจากกลุ่มดาวลิรา ที่เดินทางข้ามกาแล็กซีมายังโลกเพื่อนำบทเพลงแห่งดวงดาวมาสู่มวลมนุษย์ ด้วยเสียงร้องที่ใสราวกับคริสตัลและท่วงทำนองที่เปี่ยมไปด้วยพลัง เธอสามารถสะกดผู้ฟังให้เคลิบเคลิ้มและรู้สึกถึงความมหัศจรรย์ของจักรวาล</p>
+                <p>ในอดีต Aria เคยเป็นผู้พิทักษ์เสียงเพลงแห่งดวงดาวบนบ้านเกิดของเธอ แต่ด้วยความใฝ่ฝันที่จะแบ่งปันความงามของเสียงดนตรีให้กว้างไกลกว่าเดิม เธอจึงตัดสินใจละทิ้งตำแหน่งอันสูงส่งและออกเดินทางมายังโลกมนุษย์ ที่นี่เธอได้พบกับเหล่าสหาย VTuber คนอื่นๆ และรวมตัวกันเป็นกลุ่ม "VTuber Universe" เพื่อสร้างสรรค์ความบันเทิงและแรงบันดาลใจให้กับผู้คน</p>
+                <p>นอกจากความสามารถในการร้องเพลงแล้ว Aria ยังเป็นนักแต่งกลอนที่มีพรสวรรค์ เธอเชื่อว่าทุกบทเพลงมีเรื่องราว และทุกเรื่องราวก็สามารถกลายเป็นบทเพลงได้ เธอหวังว่าเสียงเพลงของเธอจะช่วยเยียวยาจิตใจและนำพาทุกคนไปสู่ความฝันที่รออยู่เบื้องหน้า.</p>
+            </div>
+        </section>
+
+        <div class="back-button-container">
+            <a href="หน้าตัวละคร.html" class="back-button">กลับหน้าตัวละคร</a>
+        </div>
+
+        <footer class="mt-8 text-sm opacity-60 text-center">
+            &copy; 2025 VTuber Universe. สงวนลิขสิทธิ์
+        </footer>
+    </div>
+</body>
+</html>

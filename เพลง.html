@@ -1,0 +1,769 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VTuber Universe - ห้องดนตรี</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@400;700&family=Mali:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Kanit', sans-serif;
+            margin: 0;
+            padding: 0;
+            overflow: hidden; /* Hide scrollbars */
+            display: block; /* Removed flex properties */
+            min-height: 100vh;
+            position: relative;
+            background-color: #000; /* Fallback for video load */
+        }
+
+        /* Full-screen video background */
+        #background-video {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            min-width: 100%;
+            min-height: 100%;
+            width: auto;
+            height: auto;
+            z-index: -1; /* Send video to the background */
+            transform: translate(-50%, -50%);
+            background-size: cover;
+            object-fit: cover; /* Ensures video covers the entire area while maintaining aspect ratio */
+        }
+
+        /* Player size control wrapper - Now inside the player */
+        .player-size-control-wrapper {
+            z-index: 15; /* Ensure it's above other elements in the player if needed */
+            background-color: rgba(0, 0, 0, 0.2); /* Slightly transparent background for contrast */
+            padding: 0.5rem 1rem; /* Smaller padding for internal element */
+            border-radius: 10px; /* Smaller border radius */
+            display: flex;
+            align-items: center;
+            justify-content: center; /* Center content horizontally */
+            gap: 0.8rem; /* Reduced gap */
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2); /* Lighter shadow */
+            margin-bottom: 1rem; /* Space between slider and song info */
+            cursor: default; /* Change cursor back to default over slider to indicate it's not draggable */
+        }
+
+        .player-size-control-wrapper label {
+            color: #f0f0f0;
+            font-size: 0.8rem; /* Smaller font size */
+            font-weight: 500;
+        }
+
+        .player-size-control-wrapper input[type="range"] {
+            -webkit-appearance: none;
+            width: 120px; /* Smaller width for internal element */
+            height: 6px; /* Smaller height */
+            background: rgba(255, 255, 255, 0.2); /* Lighter background */
+            border-radius: 5px;
+            outline: none;
+            transition: opacity .2s;
+        }
+        .player-size-control-wrapper input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 16px; /* Smaller thumb */
+            height: 16px; /* Smaller thumb */
+            border-radius: 50%;
+            background: #ffcc00;
+            cursor: pointer;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+        }
+        .player-size-control-wrapper input[type="range"]::-moz-range-thumb {
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: #ffcc00;
+            cursor: pointer;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+        }
+
+
+        /* Main music player container - Now draggable */
+        .music-player-container {
+            background-color: rgba(30, 0, 50, 0.9);
+            backdrop-filter: blur(0px);
+            border-radius: 25px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            padding: 2rem;
+            max-width: 350px; /* Default max-width, controlled by JS */
+            width: 90%;
+            text-align: center;
+            color: #f0f0f0;
+            position: absolute; /* Changed to absolute for dragging */
+            top: 50%; /* Initial position center */
+            left: 50%; /* Initial position center */
+            transform: translate(-50%, -50%); /* Center based on its own size */
+            z-index: 10;
+            cursor: grab; /* Indicate draggable */
+        }
+
+        .music-player-container.dragging {
+            cursor: grabbing;
+        }
+
+        .song-select-wrapper {
+            margin-bottom: 1rem; /* Space below song select */
+        }
+
+        #song-select {
+            width: 100%;
+            max-width: 250px; /* Max width for the dropdown */
+            padding: 0.6rem;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            background-color: rgba(50, 0, 80, 0.7); /* Darker background */
+            color: #f0f0f0;
+            font-family: 'Kanit', sans-serif;
+            font-size: 0.9rem;
+            cursor: pointer;
+            outline: none;
+            transition: all 0.2s ease;
+            -webkit-appearance: none; /* Remove default dropdown arrow */
+            -moz-appearance: none;
+            appearance: none;
+            background-image: url('data:image/svg+xml;charset=UTF-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22%23cccccc%22%3E%3Cpath%20d%3D%22M7%2010l5%205%205-5z%22%2F%3E%3C%2Fsvg%3E'); /* Custom arrow */
+            background-repeat: no-repeat;
+            background-position: right 0.8rem center;
+            background-size: 1em;
+        }
+        #song-select:hover {
+            border-color: #ffcc00;
+        }
+        #song-select option {
+            background-color: #300050; /* Darker option background */
+            color: #f0f0f0;
+        }
+
+        .song-info {
+            margin-bottom: 1.2rem;
+            margin-top: 0.2rem;
+        }
+        .song-info h2 {
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: #a0f0ff;
+            margin-bottom: 0.3rem;
+            word-wrap: break-word;
+        }
+        .song-info p {
+            font-size: 0.9rem;
+            color: #cccccc;
+        }
+
+        .controls-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 0.8rem;
+            margin-bottom: 0.8rem;
+        }
+
+        .control-button {
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 48px;
+            height: 48px;
+            font-size: 1.4rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .control-button:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.4);
+            background: linear-gradient(135deg, #2575fc 0%, #6a11cb 100%);
+        }
+        .control-button.play-pause {
+            width: 58px;
+            height: 58px;
+            font-size: 1.8rem;
+        }
+
+        .time-display {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.8rem;
+            color: #bbbbbb;
+            margin-bottom: 1rem;
+        }
+
+        .volume-control {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            margin-top: 0.8rem;
+            justify-content: center;
+        }
+        .volume-control input[type="range"] {
+            -webkit-appearance: none;
+            width: 90px;
+            height: 7px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 5px;
+            outline: none;
+            transition: opacity .2s;
+        }
+        .volume-control input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: #ffcc00;
+            cursor: pointer;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+        }
+        .volume-control input[type="range"]::-moz-range-thumb {
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: #ffcc00;
+            cursor: pointer;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+        }
+
+        .back-button-container {
+            margin-top: 2rem;
+        }
+        .back-button {
+            padding: 0.7rem 1.8rem;
+            font-size: 1rem;
+            border-radius: 25px;
+            background: linear-gradient(90deg, #ffa07a 0%, #ff7f50 100%);
+            color: white;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+        .back-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+            background: linear-gradient(90deg, #ff7f50 0%, #ffa07a 100%);
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .music-player-container {
+                padding: 1.5rem;
+                max-width: 320px;
+            }
+            .player-size-control-wrapper {
+                padding: 0.4rem 0.8rem;
+                margin-bottom: 0.8rem;
+            }
+            .player-size-control-wrapper label {
+                font-size: 0.75rem;
+            }
+            .player-size-control-wrapper input[type="range"] {
+                width: 100px;
+            }
+            #song-select {
+                max-width: 200px;
+                padding: 0.5rem;
+                font-size: 0.8rem;
+                background-position: right 0.6rem center;
+            }
+            .song-info h2 {
+                font-size: 1.4rem;
+            }
+            .song-info p {
+                font-size: 0.8rem;
+            }
+            .controls-container {
+                gap: 0.6rem;
+            }
+            .control-button {
+                width: 38px;
+                height: 38px;
+                font-size: 1.1rem;
+            }
+            .control-button.play-pause {
+                width: 48px;
+                height: 48px;
+                font-size: 1.4rem;
+            }
+            .volume-control input[type="range"] {
+                width: 80px;
+            }
+            .back-button {
+                padding: 0.6rem 1.5rem;
+                font-size: 0.9rem;
+            }
+        }
+        @media (max-width: 480px) {
+            .music-player-container {
+                padding: 1.2rem;
+                border-radius: 20px;
+                max-width: 95%;
+            }
+            .player-size-control-wrapper {
+                padding: 0.3rem 0.5rem;
+                margin-bottom: 0.6rem;
+            }
+            .player-size-control-wrapper label {
+                font-size: 0.65rem;
+            }
+            .player-size-control-wrapper input[type="range"] {
+                width: 80px;
+            }
+            #song-select {
+                max-width: 180px;
+                padding: 0.4rem;
+                font-size: 0.7rem;
+                background-position: right 0.5rem center;
+            }
+            .song-info h2 {
+                font-size: 1.2rem;
+            }
+            .song-info p {
+                font-size: 0.7rem;
+            }
+            .controls-container {
+                gap: 0.4rem;
+            }
+            .control-button {
+                width: 34px;
+                height: 34px;
+                font-size: 1rem;
+            }
+            .control-button.play-pause {
+                width: 44px;
+                height: 44px;
+                font-size: 1.2rem;
+            }
+            .volume-control input[type="range"] {
+                width: 60px;
+            }
+            .back-button {
+                padding: 0.5rem 1.2rem;
+                font-size: 0.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Video Background -->
+    <video id="background-video" autoplay muted loop></video>
+
+    <!-- Music Player Container -->
+    <div id="music-player-container" class="music-player-container">
+        <!-- Player Size Control - Now inside the player -->
+        <div class="player-size-control-wrapper">
+            <label for="player-size-slider">ปรับขนาด:</label>
+            <input type="range" id="player-size-slider" min="250" max="500" value="350">
+        </div>
+
+        <!-- Song Selection Dropdown -->
+        <div class="song-select-wrapper">
+            <select id="song-select">
+                <option value="" disabled selected>เลือกเพลง...</option>
+                <!-- Song options will be populated by JavaScript -->
+            </select>
+        </div>
+
+        <div class="song-info">
+            <h2 id="song-title">ชื่อเพลง</h2>
+            <p id="song-artist">ชื่อศิลปิน</p>
+            <p class="text-sm text-gray-400 mt-2">จำนวนผู้ฟัง: <span id="listener-count">0</span></p>
+        </div>
+
+        <div class="controls-container">
+            <button id="prev-button" class="control-button">&#9664;&#9664;</button> <!-- Previous music button -->
+            <button id="play-pause-button" class="control-button play-pause">&#9654;</button> <!-- Play/Pause music button -->
+            <button id="next-button" class="control-button">&#9654;&#9654;</button> <!-- Next music button -->
+        </div>
+
+        <div class="time-display">
+            <span id="current-time">0:00</span>
+            <span id="duration">0:00</span>
+        </div>
+
+        <div class="volume-control">
+            <span>&#128266;</span> <!-- Volume icon -->
+            <input type="range" id="volume-slider" min="0" max="1" step="0.01" value="0.7">
+            <span>&#128265;</span> <!-- Max Volume icon -->
+        </div>
+
+        <audio id="audio-player"></audio> <!-- Hidden audio player -->
+        
+        <div class="back-button-container">
+            <a href="หน้าแรก .html" class="back-button">กลับหน้าหลัก</a>
+        </div>
+
+        <footer class="mt-8 text-sm opacity-60 text-center">
+            &copy; 2025 VTuber Universe. สงวนลิขสิทธิ์
+        </footer>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const backgroundVideo = document.getElementById('background-video');
+            const audioPlayer = document.getElementById('audio-player');
+            const playPauseButton = document.getElementById('play-pause-button');
+            const prevButton = document.getElementById('prev-button'); // Music Prev
+            const nextButton = document.getElementById('next-button'); // Music Next
+            const currentTimeSpan = document.getElementById('current-time');
+            const durationSpan = document.getElementById('duration');
+            const songTitle = document.getElementById('song-title');
+            const songArtist = document.getElementById('song-artist');
+            const volumeSlider = document.getElementById('volume-slider');
+            const listenerCountSpan = document.getElementById('listener-count');
+
+            const playerSizeSlider = document.getElementById('player-size-slider');
+            const musicPlayerContainer = document.getElementById('music-player-container');
+            const songSelect = document.getElementById('song-select'); // Reference to the new song select dropdown
+
+            // --- Drag functionality variables ---
+            let isDragging = false;
+            let currentX;
+            let currentY;
+            let initialX;
+            let initialY;
+            let xOffset = 0;
+            let yOffset = 0;
+
+            // Placeholder video URLs (use actual 16:9 videos if possible)
+            // *** แก้ไขตรงนี้: เปลี่ยนเป็น URL สาธารณะที่ใช้งานได้จริง ***
+            const videoSources = [
+                'วิดีโอ/videoplayback (1).mp4',
+            ];
+            
+            // Placeholder music tracks (use actual royalty-free music URLs)
+            // *** แก้ไขตรงนี้: เปลี่ยนเป็น URL สาธารณะที่ใช้งานได้จริง ***
+   
+                const musicTracks = [
+            {
+                id: 'song1',
+                title: 'หมอยา',
+                artist: 'Aria Starfall',
+                url: 'วิดีโอ/videoplayback (1).mp4'
+            },
+            {
+                id: 'song2',
+                title: 'เวช',
+                artist: 'Aria',
+                url: 'วิดีโอ/【MAD】呪術廻戦 懐玉・玉折(過去編) [青のすみか⧸キタニタツヤ].webm'
+            },
+            {
+                id: 'song3',
+                title: 'Lofi 3 ชั่วโมง',
+                artist: 'Hurto',
+                url: 'วิดีโอ/lofi.mp3'
+            },
+
+            {
+                id: 'song4',
+                title: 'Little Alchemist',
+                artist: 'Hurto',
+                url: 'วิดีโอ/Little.mp3'
+            },
+
+            {
+                id: 'song5',
+                title: '1',
+                artist: 'Hurto',
+                url: 'วิดีโอ/1.mp3'
+            },
+
+
+            {
+                id: 'song6',
+                title: '2',
+                artist: 'Hurto',
+                url: 'วิดีโอ/2.mp3'
+            },
+
+            {
+                id: 'song7',
+                title: '3',
+                artist: 'Hurto',
+                url: 'วิดีโอ/3.mp3'
+            },
+
+            {
+                id: 'song8',
+                title: '4',
+                artist: 'Hurto',
+                url: 'วิดีโอ/4.mp3'
+            },
+
+            {
+                id: 'song9',
+                title: '5',
+                artist: 'Hurto',
+                url: 'วิดีโอ/5.mp3'
+            },
+
+            {
+                id: 'song10',
+                title: '6',
+                artist: 'Hurto',
+                url: 'วิดีโอ/6.mp3'
+            },
+
+            {
+                id: 'song11',
+                title: '7',
+                artist: 'Hurto',
+                url: 'วิดีโอ/7.mp3'
+            },
+
+            {
+                id: 'song12',
+                title: '8',
+                artist: 'Hurto',
+                url: 'วิดีโอ/0718.mp4'
+            },
+
+            {
+                id: 'song13',
+                title: '9',
+                artist: 'Hurto',
+                url: 'วิดีโอ/0718(1).mp4'
+            },
+
+            {
+                id: 'song14',
+                title: 'อโยธยาเอยาวดี',
+                artist: 'Hurto',
+                url: 'วิดีโอ/ToNy_GospeL - อาวรณ์ (Damask Rose)【Rock Version】#อโยธยาเอยาวดี 🇹🇭-yt.savetube.me.mp3'
+            },
+
+            ];
+
+
+            let currentVideoIndex = 0;
+            let currentMusicIndex = 0;
+            let isPlaying = false; // Controls music play state
+            let listenerCount = 1234; // Placeholder for listener count
+
+            // --- Video Background Logic ---
+            function loadVideo(index) {
+                if (videoSources[index]) {
+                    backgroundVideo.src = videoSources[index];
+                    backgroundVideo.load();
+                    backgroundVideo.play().catch(error => console.error("Error playing video:", error));
+                }
+            }
+
+            // Function for automatic video change
+            function nextVideoAuto() {
+                currentVideoIndex = (currentVideoIndex + 1) % videoSources.length;
+                loadVideo(currentVideoIndex);
+            }
+
+            // Event listener for video ending (automatic change)
+            backgroundVideo.addEventListener('ended', nextVideoAuto);
+
+            // Initialize first video
+            loadVideo(currentVideoIndex);
+
+            // --- Music Player Logic ---
+            function loadMusic(index) {
+                if (musicTracks[index]) {
+                    audioPlayer.src = musicTracks[index].url;
+                    songTitle.textContent = musicTracks[index].title;
+                    songArtist.textContent = musicTracks[index].artist;
+                    audioPlayer.load();
+                    if (isPlaying) {
+                        audioPlayer.play().catch(error => console.error("Error playing audio:", error));
+                    }
+                    updatePlayPauseButton();
+                    // Update dropdown selection when music changes (e.g., via next/prev buttons)
+                    songSelect.value = index;
+                }
+            }
+
+            function playMusic() {
+                if (audioPlayer.paused) {
+                    audioPlayer.play().catch(error => console.error("Error playing audio:", error));
+                    isPlaying = true;
+                } else {
+                    audioPlayer.pause();
+                    isPlaying = false;
+                }
+                updatePlayPauseButton();
+            }
+
+            function updatePlayPauseButton() {
+                playPauseButton.innerHTML = isPlaying ? '&#10074;&#10074;' : '&#9654;'; // Pause or Play symbol
+            }
+
+            function nextSong() {
+                currentMusicIndex = (currentMusicIndex + 1) % musicTracks.length;
+                loadMusic(currentMusicIndex);
+                if (isPlaying) {
+                    audioPlayer.play().catch(error => console.error("Error playing next song:", error));
+                }
+            }
+
+            function prevSong() {
+                currentMusicIndex = (currentMusicIndex - 1 + musicTracks.length) % musicTracks.length;
+                loadMusic(currentMusicIndex);
+                if (isPlaying) {
+                    audioPlayer.play().catch(error => console.error("Error playing previous song:", error));
+                }
+            }
+
+            function formatTime(seconds) {
+                const minutes = Math.floor(seconds / 60);
+                const remainingSeconds = Math.floor(seconds % 60);
+                return `${minutes}:${remainingSeconds < 10 ? '0' : ''}${remainingSeconds}`;
+            }
+
+            // Event Listeners for music controls
+            playPauseButton.addEventListener('click', playMusic);
+            nextButton.addEventListener('click', nextSong);
+            prevButton.addEventListener('click', prevSong);
+
+            audioPlayer.addEventListener('timeupdate', () => {
+                currentTimeSpan.textContent = formatTime(audioPlayer.currentTime);
+            });
+
+            audioPlayer.addEventListener('loadedmetadata', () => {
+                durationSpan.textContent = formatTime(audioPlayer.duration);
+            });
+
+            audioPlayer.addEventListener('ended', nextSong); // Auto play next song
+
+            volumeSlider.addEventListener('input', () => {
+                audioPlayer.volume = volumeSlider.value;
+            });
+
+            // Initial load for music player
+            loadMusic(currentMusicIndex);
+            audioPlayer.volume = volumeSlider.value; // Set initial volume
+
+            // Simulate listener count update
+            setInterval(() => {
+                listenerCount += Math.floor(Math.random() * 5) - 2; // Random change
+                if (listenerCount < 0) listenerCount = 0;
+                listenerCountSpan.textContent = listenerCount.toLocaleString();
+            }, 5000); // Update every 5 seconds
+
+            listenerCountSpan.textContent = listenerCount.toLocaleString(); // Initial display
+
+            // --- Player Size Control Logic ---
+            playerSizeSlider.addEventListener('input', () => {
+                const newWidth = playerSizeSlider.value;
+                musicPlayerContainer.style.maxWidth = `${newWidth}px`;
+
+                const baseWidth = 350; // The default width when value is 350
+                const basePadding = 2; // The default padding in rem when value is 350
+                
+                // Calculate a new padding based on the ratio of new width to base width
+                // Making padding smaller when player gets smaller
+                const newPaddingRatio = (newWidth / baseWidth);
+                const adjustedPadding = Math.max(1.5, basePadding * newPaddingRatio); // Ensure minimum padding is 1.5rem
+                musicPlayerContainer.style.padding = `${adjustedPadding}rem`;
+            });
+
+            // --- Song Selection Dropdown Logic ---
+            function populateSongSelect() {
+                // Clear existing options first (except the disabled placeholder)
+                songSelect.innerHTML = '<option value="" disabled selected>เลือกเพลง...</option>';
+                musicTracks.forEach((track, index) => {
+                    const option = document.createElement('option');
+                    option.value = index; // Use index as value to easily load the song
+                    option.textContent = `${track.title} - ${track.artist}`;
+                    songSelect.appendChild(option);
+                });
+                // Set initial selection to the currently playing song
+                songSelect.value = currentMusicIndex;
+            }
+
+            songSelect.addEventListener('change', (event) => {
+                const selectedIndex = parseInt(event.target.value, 10);
+                if (!isNaN(selectedIndex)) {
+                    currentMusicIndex = selectedIndex;
+                    loadMusic(currentMusicIndex);
+                    playMusic(); // Auto-play when a new song is selected from dropdown
+                }
+            });
+
+            // Call this function to populate the dropdown when the page loads
+            populateSongSelect();
+
+            // --- Drag functionality for music player ---
+            function dragStart(e) {
+                // Prevent drag if event target is the size slider, volume slider thumb, song select, or any interactive control
+                if (e.target === playerSizeSlider || e.target === volumeSlider ||
+                    e.target === songSelect || e.target.closest('.volume-control') || 
+                    e.target.closest('.player-size-control-wrapper') || e.target.closest('.song-select-wrapper') ||
+                    e.target.closest('.control-button') || e.target.closest('.back-button')) {
+                    return;
+                }
+
+                if (e.type === "touchstart") {
+                    initialX = e.touches[0].clientX - xOffset;
+                    initialY = e.touches[0].clientY - yOffset;
+                } else {
+                    initialX = e.clientX - xOffset;
+                    initialY = e.clientY - yOffset;
+                }
+
+                // Only start dragging if the click is on the main player container itself
+                // or its direct children that are not interactive controls
+                if (e.target === musicPlayerContainer || 
+                    (musicPlayerContainer.contains(e.target) && !e.target.closest('button') && !e.target.closest('input') && !e.target.closest('a') && !e.target.closest('select'))) {
+                    isDragging = true;
+                    musicPlayerContainer.classList.add('dragging');
+                }
+            }
+
+            function dragEnd(e) {
+                isDragging = false;
+                musicPlayerContainer.classList.remove('dragging');
+            }
+
+            function drag(e) {
+                if (isDragging) {
+                    e.preventDefault(); // Prevent default touch actions like scrolling
+
+                    if (e.type === "touchmove") {
+                        currentX = e.touches[0].clientX - initialX;
+                        currentY = e.touches[0].clientY - initialY;
+                    } else {
+                        currentX = e.clientX - initialX;
+                        currentY = e.clientY - initialY;
+                    }
+
+                    xOffset = currentX;
+                    yOffset = currentY;
+
+                    setTranslate(currentX, currentY, musicPlayerContainer);
+                }
+            }
+
+            function setTranslate(xPos, yPos, el) {
+                el.style.transform = `translate(${xPos}px, ${yPos}px)`;
+            }
+
+            // Mouse events
+            musicPlayerContainer.addEventListener("mousedown", dragStart);
+            document.addEventListener("mouseup", dragEnd);
+            document.addEventListener("mousemove", drag);
+
+            // Touch events
+            musicPlayerContainer.addEventListener("touchstart", dragStart);
+            document.addEventListener("touchend", dragEnd);
+            document.addEventListener("touchmove", drag);
+
+            // Initial positioning using CSS `transform: translate(-50%, -50%);` handles centering initially.
+            // Dragging will then adjust `transform`.
+        });
+    </script>
+</body>
+</html>

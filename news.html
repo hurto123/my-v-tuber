@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VTuber Universe - ข่าวสารล่าสุด</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@400;700&family=Mali:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Kanit', sans-serif;
+            background: linear-gradient(180deg, #0d0d21 0%, #210d32 100%); /* Dark blue-purple gradient for news */
+            color: #e6e6e6; /* Light gray text */
+            margin: 0;
+            padding: 2rem 1rem;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow-x: hidden;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background-color: rgba(0, 0, 0, 0.5); /* Slightly transparent dark background */
+            backdrop-filter: blur(6px);
+            border-radius: 25px;
+            padding: 2.5rem;
+            box-shadow: 0 12px 35px rgba(0, 0, 0, 0.6);
+            animation: slideInFromBottom 0.8s ease-out forwards; /* Entry animation */
+            position: relative;
+            border: 1px solid rgba(255, 255, 255, 0.15); /* Subtle border */
+        }
+        @keyframes slideInFromBottom {
+            from { opacity: 0; transform: translateY(50px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+        .header h1 {
+            font-family: 'Mali', cursive;
+            font-size: 4rem;
+            font-weight: 700;
+            color: #ffe0b2; /* Pale orange for title */
+            text-shadow: 0 0 18px rgba(255, 224, 178, 0.7);
+            letter-spacing: 2px;
+        }
+        .header p {
+            font-size: 1.2rem;
+            color: #cccccc;
+            margin-top: 1rem;
+        }
+
+        .news-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .news-card {
+            background-color: rgba(30, 0, 50, 0.8); /* Dark purple transparent */
+            border-radius: 15px;
+            padding: 1.5rem;
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .news-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4);
+        }
+
+        .news-card h2 {
+            font-family: 'Kanit', sans-serif;
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #a0f0ff; /* Light cyan for news titles */
+            margin-bottom: 0.8rem;
+        }
+        .news-card p {
+            font-size: 1rem;
+            line-height: 1.6;
+            margin-bottom: 1rem;
+            color: #c0c0c0;
+        }
+        .news-date {
+            font-size: 0.85rem;
+            color: #888888;
+            margin-bottom: 1.5rem;
+            display: block;
+        }
+        .read-more-button {
+            display: inline-block;
+            padding: 0.6rem 1.2rem;
+            background: linear-gradient(90deg, #a0f0ff 0%, #60a0c0 100%); /* Light cyan to muted blue */
+            color: #1a1a2e; /* Dark text */
+            border-radius: 20px;
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+        }
+        .read-more-button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .facebook-section {
+            margin-top: 3rem;
+            text-align: center;
+        }
+        .facebook-section h2 {
+            font-family: 'Mali', cursive;
+            font-size: 2.5rem;
+            color: #90ee90; /* Light Green */
+            margin-bottom: 2rem;
+            text-shadow: 0 0 10px rgba(144, 238, 144, 0.7);
+        }
+        .facebook-link-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+        }
+        .facebook-link {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+            background-color: #3b5998; /* Facebook Blue */
+            color: white;
+            border-radius: 10px;
+            text-decoration: none;
+            font-size: 1.1rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+        }
+        .facebook-link:hover {
+            background-color: #2d4373; /* Darker Facebook Blue */
+            transform: translateY(-3px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.4);
+        }
+        .facebook-icon {
+            margin-right: 0.8rem;
+            width: 24px;
+            height: 24px;
+            /* Simple SVG for Facebook icon */
+            filter: invert(100%) sepia(0%) saturate(7500%) hue-rotate(200deg) brightness(100%) contrast(100%); /* To make a white icon */
+        }
+        .back-button-container {
+            margin-top: 3rem;
+            text-align: center;
+        }
+        .back-button {
+            display: inline-block;
+            padding: 0.8rem 2rem;
+            background: linear-gradient(90deg, #ffa07a 0%, #ff7f50 100%); /* Light Salmon to Coral */
+            color: white;
+            border-radius: 30px;
+            text-decoration: none;
+            font-size: 1.1rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+        .back-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+            background: linear-gradient(90deg, #ff7f50 0%, #ffa07a 100%); /* Reverse gradient on hover */
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .container {
+                padding: 1.8rem;
+            }
+            .header h1 {
+                font-size: 3rem;
+            }
+            .header p {
+                font-size: 1.1rem;
+            }
+            .news-grid {
+                gap: 1.5rem;
+            }
+            .news-card h2 {
+                font-size: 1.5rem;
+            }
+            .news-card p {
+                font-size: 0.9rem;
+            }
+            .read-more-button {
+                padding: 0.5rem 1rem;
+                font-size: 0.8rem;
+            }
+            .facebook-section h2 {
+                font-size: 2rem;
+            }
+            .facebook-link {
+                font-size: 1rem;
+                padding: 0.8rem;
+            }
+            .back-button {
+                padding: 0.7rem 1.8rem;
+                font-size: 1rem;
+            }
+        }
+        @media (max-width: 480px) {
+            .container {
+                padding: 1.2rem;
+                border-radius: 20px;
+            }
+            .header h1 {
+                font-size: 2.2rem;
+            }
+            .header p {
+                font-size: 0.9rem;
+            }
+            .news-grid {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+            .news-card h2 {
+                font-size: 1.3rem;
+            }
+            .news-card p {
+                font-size: 0.8rem;
+            }
+            .facebook-section h2 {
+                font-size: 1.8rem;
+            }
+            .facebook-link {
+                font-size: 0.9rem;
+                padding: 0.6rem;
+            }
+            .back-button {
+                padding: 0.6rem 1.5rem;
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>ข่าวสารล่าสุดจาก VTuber Universe</h1>
+            <p>ติดตามทุกความเคลื่อนไหว กิจกรรม และอัปเดตพิเศษของเหล่า VTuber ได้ที่นี่!</p>
+        </header>
+
+        <section class="news-grid">
+            <!-- News Card 1 -->
+            <div class="news-card">
+                <h2>ประกาศกิจกรรมแฟนมีตติ้งครั้งแรก!</h2>
+                <span class="news-date">วันที่ 20 มิถุนายน 2025</span>
+                <p>เตรียมตัวให้พร้อม! พวกเรา VTuber Universe จะจัดกิจกรรมแฟนมีตติ้งเป็นครั้งแรกในวันที่ 10 กรกฎาคมนี้ รายละเอียดเพิ่มเติมจะประกาศเร็วๆ นี้!</p>
+                <a href="#" class="read-more-button">อ่านเพิ่มเติม</a>
+            </div>
+
+            <!-- News Card 2 -->
+            <div class="news-card">
+                <h2>ซิงเกิลใหม่ของ Aria Starfall ปล่อยแล้ว!</h2>
+                <span class="news-date">วันที่ 15 มิถุนายน 2025</span>
+                <p>Aria Starfall ได้ปล่อยซิงเกิลใหม่ล่าสุด "Starlight Serenade" ให้ทุกคนได้ฟังแล้ววันนี้! ไปฟังกันได้เลยบนแพลตฟอร์มเพลงที่คุณชื่นชอบ!</p>
+                <a href="#" class="read-more-button">อ่านเพิ่มเติม</a>
+            </div>
+
+            <!-- News Card 3 -->
+            <div class="news-card">
+                <h2>Kaito Aqua สตรีมสำรวจทะเลลึก!</h2>
+                <span class="news-date">วันที่ 10 มิถุนายน 2025</span>
+                <p>Kaito Aqua จะพาทุกคนดำดิ่งสู่โลกใต้สมุทรในการสตรีมพิเศษ "Deep Sea Expedition" ในสุดสัปดาห์นี้ ห้ามพลาด!</p>
+                <a href="#" class="read-more-button">อ่านเพิ่มเติม</a>
+            </div>
+
+            <!-- News Card 4 -->
+            <div class="news-card">
+                <h2>สินค้า Official ใหม่กำลังจะมา!</h2>
+                <span class="news-date">วันที่ 5 มิถุนายน 2025</span>
+                <p>เตรียมพบกับคอลเลกชันสินค้า Official ใหม่ล่าสุดจาก VTuber Universe เร็วๆ นี้! ติดตามรายละเอียดได้ทางโซเชียลมีเดียของเรา.</p>
+                <a href="#" class="read-more-button">อ่านเพิ่มเติม</a>
+            </div>
+        </section>
+
+        <section class="facebook-section">
+            <h2>ติดตามพวกเราบน Facebook</h2>
+            <div class="facebook-link-grid">
+                <!-- Facebook Page Link 1 -->
+                <a href="https://www.facebook.com/facebookapp" target="_blank" class="facebook-link">
+                    <svg class="facebook-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878V14.89h-2.54V12h2.54V9.75c0-2.505 1.493-3.891 3.776-3.891 1.094 0 2.24.195 2.24.195v2.46h-1.262c-1.225 0-1.628.765-1.628 1.559V12h2.77l-.443 2.89h-2.327v6.988C18.343 21.128 22 16.991 22 12c0-5.523-4.477-10-10-10z"/></svg>
+                    <span>VTuber Universe Official Page</span>
+                </a>
+
+                <!-- Facebook Page Link 2 (Example for a specific VTuber's page) -->
+                <a href="https://www.facebook.com/facebook" target="_blank" class="facebook-link">
+                    <svg class="facebook-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878V14.89h-2.54V12h2.54V9.75c0-2.505 1.493-3.891 3.776-3.891 1.094 0 2.24.195 2.24.195v2.46h-1.262c-1.225 0-1.628.765-1.628 1.559V12h2.77l-.443 2.89h-2.327v6.988C18.343 21.128 22 16.991 22 12c0-5.523-4.477-10-10-10z"/></svg>
+                    <span>Aria Starfall Fan Page</span>
+                </a>
+
+                <!-- Facebook Page Link 3 -->
+                <a href="https://www.facebook.com/Meta" target="_blank" class="facebook-link">
+                    <svg class="facebook-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878V14.89h-2.54V12h2.54V9.75c0-2.505 1.493-3.891 3.776-3.891 1.094 0 2.24.195 2.24.195v2.46h-1.262c-1.225 0-1.628.765-1.628 1.559V12h2.77l-.443 2.89h-2.327v6.988C18.343 21.128 22 16.991 22 12c0-5.523-4.477-10-10-10z"/></svg>
+                    <span>Kaito Aqua Official Fanclub</span>
+                </a>
+            </div>
+            <p class="mt-4 text-sm opacity-70">คลิกที่ลิงก์เพื่อไปยังหน้า Facebook ของเรา!</p>
+        </section>
+
+        <div class="back-button-container">
+            <a href="หน้าแรก .html" class="back-button">กลับหน้าหลัก</a>
+        </div>
+
+        <footer class="mt-8 text-sm opacity-60 text-center">
+            &copy; 2025 VTuber Universe. สงวนลิขสิทธิ์
+        </footer>
+    </div>
+</body>
+</html>
